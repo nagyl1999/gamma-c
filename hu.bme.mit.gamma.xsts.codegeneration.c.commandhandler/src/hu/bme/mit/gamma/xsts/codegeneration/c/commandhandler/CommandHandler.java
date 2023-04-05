@@ -12,10 +12,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 import hu.bme.mit.gamma.xsts.model.*;
+import hu.bme.mit.gamma.xsts.codegeneration.c.*;
 
 public class CommandHandler extends AbstractHandler {
 	
@@ -28,21 +28,32 @@ public class CommandHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		
+		/* read parameter from ui event */
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
 		Object element = selection.getFirstElement();
 		
+		/* in case of type mismatch throw exception */
 		if (!(element instanceof IFile)) {
 			LOGGER.severe("Invalid parameter: " + element);
-			return null;
+			throw new IllegalArgumentException("Parameter type must be *.gsts");
 		}
 		
+		/* retrieve xsts model */
 		IFile file = (IFile) element;
 		Resource res = loadResource(URI.createURI(file.getLocationURI().toString()));
 		XSTS xsts = (XSTS) res.getContents().get(0);
 		
+		System.out.println(URI.createURI(file.getLocationURI().toString()).toString());
+		
 		LOGGER.info("XSTS model " + xsts.getName() + " successfully read.");
 		
-		System.out.println(xsts.getName());
+		/* build c code */
+		CodeBuilder builder = new CodeBuilder(xsts);
+		builder.constructHeader();
+		builder.constructCode();
+		builder.save();
+		
+		LOGGER.info("C code from model " + xsts.getName() + " successfully created.");
 		
 		return null;
 	}
