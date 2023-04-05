@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Commandhandler
+Bundle-SymbolicName: hu.bme.mit.gamma.xsts.codegeneration.c.commandhandler
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: hu.bme.mit.gamma.xsts.codegeneration.c.commandhandler
+Bundle-RequiredExecutionEnvironment: JavaSE-17
