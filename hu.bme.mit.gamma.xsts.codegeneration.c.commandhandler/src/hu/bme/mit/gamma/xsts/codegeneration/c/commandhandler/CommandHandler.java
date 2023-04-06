@@ -1,5 +1,6 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c.commandhandler;
 
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,6 +25,15 @@ public class CommandHandler extends AbstractHandler {
 	public Resource loadResource(URI uri) {
 	    return new ResourceSetImpl().getResource(uri, true);
 	}
+	
+	public URI getPackageRoot(URI uri) {
+	    /* keep stepping back until the until the folder "src" exists */
+		while (!new File(uri.toFileString() + "/src").exists()) {
+	        uri = uri.trimSegments(1);
+	    }
+	    /* now uri should point to the root of the package */
+	    return uri;
+	}
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -43,7 +53,8 @@ public class CommandHandler extends AbstractHandler {
 		Resource res = loadResource(URI.createURI(file.getLocationURI().toString()));
 		XSTS xsts = (XSTS) res.getContents().get(0);
 		
-		System.out.println(URI.createURI(file.getLocationURI().toString()).toString());
+		/* determine the path of the project's root */
+		URI root = getPackageRoot(URI.createURI(file.getLocationURI().toString()));
 		
 		LOGGER.info("XSTS model " + xsts.getName() + " successfully read.");
 		
@@ -51,7 +62,7 @@ public class CommandHandler extends AbstractHandler {
 		CodeBuilder builder = new CodeBuilder(xsts);
 		builder.constructHeader();
 		builder.constructCode();
-		builder.save();
+		builder.save(root);
 		
 		LOGGER.info("C code from model " + xsts.getName() + " successfully created.");
 		
