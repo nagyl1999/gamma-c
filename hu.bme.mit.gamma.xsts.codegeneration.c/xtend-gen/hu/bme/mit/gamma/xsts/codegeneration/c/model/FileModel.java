@@ -4,13 +4,15 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function0;
 
 /**
  * Represents a file in the generated C code.
  */
 @SuppressWarnings("all")
-public class FileModel {
+public abstract class FileModel {
   /**
    * The name of the file.
    */
@@ -20,6 +22,18 @@ public class FileModel {
    * The content of the file.
    */
   protected String content;
+
+  /**
+   * New line
+   */
+  public static final String NEW_LINE = new Function0<String>() {
+    @Override
+    public String apply() {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.newLine();
+      return _builder.toString();
+    }
+  }.apply();
 
   /**
    * Constructs a new {@code FileModel} instance with the given name.
@@ -57,7 +71,7 @@ public class FileModel {
    */
   public void addContent(final String content) {
     String _content = this.content;
-    this.content = (_content + content);
+    this.content = (_content + (FileModel.NEW_LINE + content));
   }
 
   /**

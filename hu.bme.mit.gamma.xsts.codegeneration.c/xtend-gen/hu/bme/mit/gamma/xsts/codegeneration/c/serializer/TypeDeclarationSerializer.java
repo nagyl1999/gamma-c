@@ -22,7 +22,6 @@ public class TypeDeclarationSerializer {
    */
   protected String _serialize(final EnumerationTypeDefinition type, final String name) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.newLine();
     _builder.append("/* Enum representing region ");
     _builder.append(name);
     _builder.append(" */");

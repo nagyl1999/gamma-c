@@ -18,7 +18,6 @@ public class HeaderModel extends FileModel {
       @Override
       public String apply() {
         StringConcatenation _builder = new StringConcatenation();
-        _builder.append("\'");
         String _lowerCase = name.toLowerCase();
         _builder.append(_lowerCase);
         _builder.append(".h");

@@ -18,12 +18,11 @@ class TypeDeclarationSerializer {
 	 */
 	def dispatch String serialize(EnumerationTypeDefinition type, String name) {
 		return '''
-			
 			/* Enum representing region «name» */
 			enum «name» {
 				«FOR literal : type.literals SEPARATOR ',\n'»«literal.name»_«name.toLowerCase»«ENDFOR»
 			} «name.toLowerCase»;
-			''';
+		''';
 	}
 	
 	/**
@@ -43,7 +42,7 @@ class TypeDeclarationSerializer {
 	 * @param type The type declaration.
 	 * @return The serialized string representation.
 	 */
-	def String serialize(TypeDeclaration  type) {
+	def String serialize(TypeDeclaration type) {
 		type.type.serialize(type.name);
 	}
 	

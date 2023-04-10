@@ -9,11 +9,17 @@ import org.eclipse.emf.common.util.URI
 /**
  * Represents a file in the generated C code.
  */
-class FileModel {
+abstract class FileModel {
 	/** The name of the file. */
 	protected String name;
 	/** The content of the file. */
 	protected String content;
+	
+	/** New line */
+	public static final String NEW_LINE =
+	'''
+
+	''';
 	
 	/**
      * Constructs a new {@code FileModel} instance with the given name.
@@ -44,7 +50,7 @@ class FileModel {
      * @param content the content to be added to the file
      */
 	public def void addContent(String content) {
-		this.content += content;
+		this.content += NEW_LINE + content;
 	}
 	
 	/**

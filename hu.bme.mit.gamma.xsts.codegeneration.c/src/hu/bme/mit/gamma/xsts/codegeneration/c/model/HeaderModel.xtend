@@ -11,7 +11,7 @@ class HeaderModel extends FileModel {
      * @param name the name of the header file
      */
 	public new(String name) {
-		super(''''«name.toLowerCase».h''');
+		super('''«name.toLowerCase».h''');
 		this.content = '''
 			#include <stdbool.h>
 			
