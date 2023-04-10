@@ -1,9 +1,12 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c;
 
+import hu.bme.mit.gamma.expression.model.Type;
 import hu.bme.mit.gamma.expression.model.TypeDeclaration;
+import hu.bme.mit.gamma.expression.model.TypeReference;
 import hu.bme.mit.gamma.expression.model.VariableDeclaration;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel;
+import hu.bme.mit.gamma.xsts.codegeneration.c.model.TestModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ActionSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.TypeDeclarationSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer;
@@ -30,6 +33,8 @@ public class CodeBuilder {
 
   private CodeModel code;
 
+  private TestModel test;
+
   private HeaderModel header;
 
   private final ActionSerializer actionSerializer = new ActionSerializer();
@@ -45,6 +50,8 @@ public class CodeBuilder {
     this.name = StringExtensions.toFirstUpper(xsts.getName());
     CodeModel _codeModel = new CodeModel(this.name);
     this.code = _codeModel;
+    TestModel _testModel = new TestModel(this.name);
+    this.test = _testModel;
     HeaderModel _headerModel = new HeaderModel(this.name);
     this.header = _headerModel;
     this.stName = (this.name + "Statechart");
@@ -58,7 +65,13 @@ public class CodeBuilder {
     StringConcatenation _builder = new StringConcatenation();
     {
       EList<TypeDeclaration> _typeDeclarations = this.xsts.getTypeDeclarations();
+      boolean _hasElements = false;
       for(final TypeDeclaration typeDeclaration : _typeDeclarations) {
+        if (!_hasElements) {
+          _hasElements = true;
+        } else {
+          _builder.appendImmediate("\n", "");
+        }
         String _serialize = this.typeDeclarationSerializer.serialize(typeDeclaration);
         _builder.append(_serialize);
       }
@@ -74,10 +87,10 @@ public class CodeBuilder {
     _builder_1.append("\t");
     {
       EList<VariableDeclaration> _variableDeclarations = this.xsts.getVariableDeclarations();
-      boolean _hasElements = false;
+      boolean _hasElements_1 = false;
       for(final VariableDeclaration variableDeclaration : _variableDeclarations) {
-        if (!_hasElements) {
-          _hasElements = true;
+        if (!_hasElements_1) {
+          _hasElements_1 = true;
         } else {
           _builder_1.appendImmediate("\n", "\t");
         }
@@ -106,7 +119,6 @@ public class CodeBuilder {
     _builder_2.append(this.stName);
     _builder_2.append("* statechart);");
     _builder_2.newLineIfNotEmpty();
-    _builder_2.newLine();
     _builder_2.append("/* Initialize component ");
     _builder_2.append(this.name);
     _builder_2.append(" */");
@@ -117,7 +129,6 @@ public class CodeBuilder {
     _builder_2.append(this.stName);
     _builder_2.append("* statechart);");
     _builder_2.newLineIfNotEmpty();
-    _builder_2.newLine();
     _builder_2.append("/* Entry event of component ");
     _builder_2.append(this.name);
     _builder_2.append(" */");
@@ -128,7 +139,6 @@ public class CodeBuilder {
     _builder_2.append(this.stName);
     _builder_2.append("* statechart);");
     _builder_2.newLineIfNotEmpty();
-    _builder_2.newLine();
     _builder_2.append("/* Clear input events of component ");
     _builder_2.append(this.name);
     _builder_2.append(" */");
@@ -139,7 +149,6 @@ public class CodeBuilder {
     _builder_2.append(this.stName);
     _builder_2.append("* statechart);");
     _builder_2.newLineIfNotEmpty();
-    _builder_2.newLine();
     _builder_2.append("/* Clear output events of component ");
     _builder_2.append(this.name);
     _builder_2.append(" */");
@@ -150,7 +159,6 @@ public class CodeBuilder {
     _builder_2.append(this.stName);
     _builder_2.append("* statechart);");
     _builder_2.newLineIfNotEmpty();
-    _builder_2.newLine();
     _builder_2.append("/* Transitions of component ");
     _builder_2.append(this.name);
     _builder_2.append(" */");
@@ -161,7 +169,6 @@ public class CodeBuilder {
     _builder_2.append(this.stName);
     _builder_2.append("* statechart);");
     _builder_2.newLineIfNotEmpty();
-    _builder_2.newLine();
     _builder_2.append("/* Run cycle in component ");
     _builder_2.append(this.name);
     _builder_2.append(" */");
@@ -333,6 +340,82 @@ public class CodeBuilder {
     this.code.addContent(_builder_6.toString());
   }
 
+  public void constructTest() {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("void printStates(");
+    _builder.append(this.stName);
+    _builder.append("* statechart) {");
+    _builder.newLineIfNotEmpty();
+    {
+      EList<VariableDeclaration> _variableDeclarations = this.xsts.getVariableDeclarations();
+      boolean _hasElements = false;
+      for(final VariableDeclaration variableDeclaration : _variableDeclarations) {
+        if (!_hasElements) {
+          _hasElements = true;
+        } else {
+          _builder.appendImmediate("\n", "\t");
+        }
+        {
+          Type _type = variableDeclaration.getType();
+          if ((_type instanceof TypeReference)) {
+            _builder.append("\t");
+            _builder.append("printf(\"");
+            String _name = variableDeclaration.getName();
+            _builder.append(_name, "\t");
+            _builder.append(": %d\\n\", statechart->");
+            String _name_1 = variableDeclaration.getName();
+            _builder.append(_name_1, "\t");
+            _builder.append(");");
+            _builder.newLineIfNotEmpty();
+          }
+        }
+      }
+    }
+    _builder.append("}");
+    _builder.newLine();
+    this.test.addContent(_builder.toString());
+    StringConcatenation _builder_1 = new StringConcatenation();
+    _builder_1.append("/* Main function */");
+    _builder_1.newLine();
+    _builder_1.append("int main() {");
+    _builder_1.newLine();
+    _builder_1.append("\t");
+    _builder_1.append(this.stName, "\t");
+    _builder_1.append(" statechart;");
+    _builder_1.newLineIfNotEmpty();
+    _builder_1.append("\t");
+    _builder_1.newLine();
+    _builder_1.append("\t");
+    _builder_1.append("resetSystemStatechart(&statechart);");
+    _builder_1.newLine();
+    _builder_1.append("\t");
+    _builder_1.append("initializeSystemStatechart(&statechart);");
+    _builder_1.newLine();
+    _builder_1.append("\t");
+    _builder_1.append("entryEventsSystemStatechart(&statechart);");
+    _builder_1.newLine();
+    _builder_1.append("\t");
+    _builder_1.newLine();
+    _builder_1.append("\t");
+    _builder_1.append("while (1) {");
+    _builder_1.newLine();
+    _builder_1.append("\t\t");
+    _builder_1.append("printStates(&statechart);");
+    _builder_1.newLine();
+    _builder_1.append("\t\t");
+    _builder_1.append("runCycleSystemStatechart(&statechart);");
+    _builder_1.newLine();
+    _builder_1.append("\t\t");
+    _builder_1.append("sleep(1);");
+    _builder_1.newLine();
+    _builder_1.append("\t");
+    _builder_1.append("}");
+    _builder_1.newLine();
+    _builder_1.append("}");
+    _builder_1.newLine();
+    this.test.addContent(_builder_1.toString());
+  }
+
   public void save(final URI uri) {
     try {
       URI local = uri.appendSegment("src-gen");
@@ -350,6 +433,7 @@ public class CodeBuilder {
         Files.createDirectories(Paths.get(local.toFileString()));
       }
       this.code.save(local);
+      this.test.save(local);
       this.header.save(local);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

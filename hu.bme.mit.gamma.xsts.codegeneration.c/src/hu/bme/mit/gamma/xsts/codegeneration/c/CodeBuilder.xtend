@@ -9,6 +9,7 @@ import java.io.File;
 import java.nio.file.Files
 import java.nio.file.Paths
 import org.eclipse.emf.common.util.URI
+import hu.bme.mit.gamma.expression.model.TypeReference
 
 class CodeBuilder {
 	
@@ -17,6 +18,7 @@ class CodeBuilder {
 	private String stName;
 	
 	private CodeModel code;
+	private TestModel test;
 	private HeaderModel header;
 	
 	private final ActionSerializer actionSerializer = new ActionSerializer;
@@ -29,6 +31,7 @@ class CodeBuilder {
 		this.xsts = xsts;
 		this.name = xsts.name.toFirstUpper;
 		this.code = new CodeModel(name);
+		this.test = new TestModel(name);
 		this.header = new HeaderModel(name);
 		this.stName = name + "Statechart";
 		xsts.variableDeclarations.forEach[variableDeclaration |
@@ -38,7 +41,7 @@ class CodeBuilder {
 	
 	public def void constructHeader() {
 		/* Enum Type Declarations */
-		header.addContent('''«FOR typeDeclaration : xsts.typeDeclarations»«typeDeclarationSerializer.serialize(typeDeclaration)»«ENDFOR»''');
+		header.addContent('''«FOR typeDeclaration : xsts.typeDeclarations SEPARATOR '\n'»«typeDeclarationSerializer.serialize(typeDeclaration)»«ENDFOR»''');
 
 		/* Struct Declaration */
 		header.addContent('''
@@ -52,22 +55,16 @@ class CodeBuilder {
 		header.addContent('''
 			/* Reset component «name» */
 			void reset«stName»(«stName»* statechart);
-			
 			/* Initialize component «name» */
 			void initialize«stName»(«stName»* statechart);
-			
 			/* Entry event of component «name» */
 			void entryEvents«stName»(«stName»* statechart);
-			
 			/* Clear input events of component «name» */
 			void clearInEvents«stName»(«stName»* statechart);
-			
 			/* Clear output events of component «name» */
 			void clearOutEvents«stName»(«stName»* statechart);
-			
 			/* Transitions of component «name» */
 			void changeState«stName»(«stName»* statechart);
-			
 			/* Run cycle in component «name» */
 			void runCycle«stName»(«stName»* statechart);
 		''');
@@ -138,6 +135,37 @@ class CodeBuilder {
 		''');
 	}
 	
+	public def void constructTest() {
+		/* Print states */
+		test.addContent('''
+		void printStates(«stName»* statechart) {
+			«FOR variableDeclaration : xsts.variableDeclarations SEPARATOR '\n'»
+				«IF variableDeclaration.type instanceof TypeReference»
+					printf("«variableDeclaration.name»: %d\n", statechart->«variableDeclaration.name»);
+				«ENDIF»
+			«ENDFOR»
+		}
+		''');
+		
+		/* Main function */
+		test.addContent('''
+			/* Main function */
+			int main() {
+				«stName» statechart;
+				
+				resetSystemStatechart(&statechart);
+				initializeSystemStatechart(&statechart);
+				entryEventsSystemStatechart(&statechart);
+				
+				while (1) {
+					printStates(&statechart);
+					runCycleSystemStatechart(&statechart);
+					sleep(1);
+				}
+			}
+		''');
+	}
+	
 	public def void save(URI uri) {
 		/* create src-gen if not present */
 		var URI local = uri.appendSegment("src-gen");
@@ -151,7 +179,9 @@ class CodeBuilder {
 		
 		/* save models */
 		code.save(local);
+		test.save(local);
 		header.save(local);
+		
 	}
 	
 }

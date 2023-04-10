@@ -62,6 +62,7 @@ public class CommandHandler extends AbstractHandler {
 		CodeBuilder builder = new CodeBuilder(xsts);
 		builder.constructHeader();
 		builder.constructCode();
+		builder.constructTest();
 		builder.save(root);
 		
 		LOGGER.info("C code from model " + xsts.getName() + " successfully created.");
