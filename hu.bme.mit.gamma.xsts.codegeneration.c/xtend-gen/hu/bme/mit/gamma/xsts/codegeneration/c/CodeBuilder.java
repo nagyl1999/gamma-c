@@ -348,13 +348,7 @@ public class CodeBuilder {
     _builder.newLineIfNotEmpty();
     {
       EList<VariableDeclaration> _variableDeclarations = this.xsts.getVariableDeclarations();
-      boolean _hasElements = false;
       for(final VariableDeclaration variableDeclaration : _variableDeclarations) {
-        if (!_hasElements) {
-          _hasElements = true;
-        } else {
-          _builder.appendImmediate("\n", "\t");
-        }
         {
           Type _type = variableDeclaration.getType();
           if ((_type instanceof TypeReference)) {

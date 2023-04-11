@@ -139,7 +139,7 @@ class CodeBuilder {
 		/* Print states */
 		test.addContent('''
 		void printStates(«stName»* statechart) {
-			«FOR variableDeclaration : xsts.variableDeclarations SEPARATOR '\n'»
+			«FOR variableDeclaration : xsts.variableDeclarations»
 				«IF variableDeclaration.type instanceof TypeReference»
 					printf("«variableDeclaration.name»: %d\n", statechart->«variableDeclaration.name»);
 				«ENDIF»
