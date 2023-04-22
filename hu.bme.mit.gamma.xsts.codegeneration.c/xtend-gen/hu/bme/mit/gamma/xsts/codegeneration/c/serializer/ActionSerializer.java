@@ -5,6 +5,7 @@ import hu.bme.mit.gamma.xsts.model.Action;
 import hu.bme.mit.gamma.xsts.model.AssignmentAction;
 import hu.bme.mit.gamma.xsts.model.EmptyAction;
 import hu.bme.mit.gamma.xsts.model.IfAction;
+import hu.bme.mit.gamma.xsts.model.NonDeterministicAction;
 import hu.bme.mit.gamma.xsts.model.ParallelAction;
 import hu.bme.mit.gamma.xsts.model.SequentialAction;
 import hu.bme.mit.gamma.xsts.model.VariableDeclarationAction;
@@ -13,6 +14,9 @@ import java.util.Arrays;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
 
+/**
+ * This class provides a serializer for actions in XSTS models.
+ */
 @SuppressWarnings("all")
 public class ActionSerializer {
   private final ExpressionSerializer expressionSerializer = new ExpressionSerializer();
@@ -21,6 +25,12 @@ public class ActionSerializer {
 
   private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer();
 
+  /**
+   * Serializes an initializing action.
+   * 
+   * @param xSts an XSTS model
+   * @return a CharSequence that represents the serialized initializing action
+   */
   public CharSequence serializeInitializingAction(final XSTS xSts) {
     StringConcatenation _builder = new StringConcatenation();
     CharSequence _serialize = this.serialize(XstsDerivedFeatures.getInitializingAction(xSts));
@@ -28,10 +38,22 @@ public class ActionSerializer {
     return _builder;
   }
 
+  /**
+   * Throws an IllegalArgumentException if the action is not supported.
+   * 
+   * @param action an action
+   * @return a CharSequence that represents the serialized action
+   */
   protected CharSequence _serialize(final Action action) {
     throw new IllegalArgumentException(("Not supported action: " + action));
   }
 
+  /**
+   * Serializes an IfAction.
+   * 
+   * @param action an IfAction
+   * @return a CharSequence that represents the serialized IfAction
+   */
   protected CharSequence _serialize(final IfAction action) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("if (");
@@ -54,42 +76,84 @@ public class ActionSerializer {
     return _builder;
   }
 
+  /**
+   * Serializes a SequentialAction.
+   * 
+   * @param action a SequentialAction
+   * @return a CharSequence that represents the serialized SequentialAction
+   */
   protected CharSequence _serialize(final SequentialAction action) {
     StringConcatenation _builder = new StringConcatenation();
     {
       EList<Action> _actions = action.getActions();
       boolean _hasElements = false;
-      for(final Action xStsSubaction : _actions) {
+      for(final Action xstsSubaction : _actions) {
         if (!_hasElements) {
           _hasElements = true;
         } else {
           _builder.appendImmediate("\n", "");
         }
-        CharSequence _serialize = this.serialize(xStsSubaction);
+        CharSequence _serialize = this.serialize(xstsSubaction);
         _builder.append(_serialize);
       }
     }
     return _builder;
   }
 
+  /**
+   * Serializes a ParallelAction.
+   * 
+   * @param action a ParallelAction
+   * @return a CharSequence that represents the serialized ParallelAction
+   */
   protected CharSequence _serialize(final ParallelAction action) {
     StringConcatenation _builder = new StringConcatenation();
     {
       EList<Action> _actions = action.getActions();
       boolean _hasElements = false;
-      for(final Action xStsSubaction : _actions) {
+      for(final Action xstsSubaction : _actions) {
         if (!_hasElements) {
           _hasElements = true;
         } else {
           _builder.appendImmediate("\n", "");
         }
-        CharSequence _serialize = this.serialize(xStsSubaction);
+        CharSequence _serialize = this.serialize(xstsSubaction);
         _builder.append(_serialize);
       }
     }
     return _builder;
   }
 
+  /**
+   * Serializes a NonDeterministicAction.
+   * 
+   * @param action a NonDeterministicAction
+   * @return a CharSequence that represents the serialized NonDeterministicAction
+   */
+  protected CharSequence _serialize(final NonDeterministicAction action) {
+    StringConcatenation _builder = new StringConcatenation();
+    {
+      EList<Action> _actions = action.getActions();
+      boolean _hasElements = false;
+      for(final Action xstsSubaction : _actions) {
+        if (!_hasElements) {
+          _hasElements = true;
+        } else {
+          _builder.appendImmediate("\n", "");
+        }
+        CharSequence _serialize = this.serialize(xstsSubaction);
+        _builder.append(_serialize);
+      }
+    }
+    return _builder;
+  }
+
+  /**
+   * Serializes an AssignmentAction.
+   * 
+   * @param action an AssignmentAction
+   * @return a CharSequence that represents the serialized AssignmentAction
+   */
   protected CharSequence _serialize(final AssignmentAction action) {
     StringConcatenation _builder = new StringConcatenation();
     String _serialize = this.expressionSerializer.serialize(action.getLhs());
@@ -101,6 +165,12 @@ public class ActionSerializer {
     return _builder;
   }
 
+  /**
+   * Serializes a VariableDeclarationAction.
+   * 
+   * @param action a VariableDeclarationAction
+   * @return a CharSequence that represents the serialized VariableDeclarationAction
+   */
   protected CharSequence _serialize(final VariableDeclarationAction action) {
     StringConcatenation _builder = new StringConcatenation();
     String _serialize = this.variableDeclarationSerializer.serialize(action.getVariableDeclaration().getType(), action.getVariableDeclaration().getName());
@@ -112,6 +182,12 @@ public class ActionSerializer {
     return _builder;
   }
 
+  /**
+   * Serializes an EmptyAction.
+   * 
+   * @param action an EmptyAction
+   * @return a CharSequence that represents the serialized EmptyAction
+   */
   protected CharSequence _serialize(final EmptyAction action) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("/* Empty Action */");
@@ -121,6 +197,8 @@ public class ActionSerializer {
   public CharSequence serialize(final Action action) {
     if (action instanceof AssignmentAction) {
       return _serialize((AssignmentAction)action);
+    } else if (action instanceof NonDeterministicAction) {
+      return _serialize((NonDeterministicAction)action);
     } else if (action instanceof ParallelAction) {
       return _serialize((ParallelAction)action);
     } else if (action instanceof SequentialAction) {
