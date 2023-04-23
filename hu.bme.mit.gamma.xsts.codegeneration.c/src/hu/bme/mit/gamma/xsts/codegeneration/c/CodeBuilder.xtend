@@ -11,7 +11,7 @@ import java.nio.file.Paths
 import org.eclipse.emf.common.util.URI
 import hu.bme.mit.gamma.expression.model.TypeReference
 
-class CodeBuilder {
+class CodeBuilder implements IStatechartCode {
 	
 	private XSTS xsts;
 	private String name;
@@ -30,16 +30,20 @@ class CodeBuilder {
 	public new(XSTS xsts) {
 		this.xsts = xsts;
 		this.name = xsts.name.toFirstUpper;
+		this.stName = name + "Statechart";
+		/* code files */
 		this.code = new CodeModel(name);
 		this.test = new TestModel(name);
 		this.header = new HeaderModel(name);
-		this.stName = name + "Statechart";
+		/* all non-local variable names */
 		xsts.variableDeclarations.forEach[variableDeclaration |
     		componentVariables.add(variableDeclaration.name)
-		]
+		];
+		/* optional */
+		this.constructTest();
 	}
 	
-	public def void constructHeader() {
+	public override void constructHeader() {
 		/* Enum Type Declarations */
 		header.addContent('''«FOR typeDeclaration : xsts.typeDeclarations SEPARATOR '\n'»«typeDeclarationSerializer.serialize(typeDeclaration)»«ENDFOR»''');
 
@@ -75,7 +79,7 @@ class CodeBuilder {
 		''');
 	}
 	
-	public def void constructCode() {
+	public override void constructCode() {
 		/* Reset struct */
 		code.addContent('''
 			/* Reset component «name» */
@@ -166,7 +170,7 @@ class CodeBuilder {
 		''');
 	}
 	
-	public def void save(URI uri) {
+	public override void save(URI uri) {
 		/* create src-gen if not present */
 		var URI local = uri.appendSegment("src-gen");
 		if (!new File(local.toFileString()).exists())

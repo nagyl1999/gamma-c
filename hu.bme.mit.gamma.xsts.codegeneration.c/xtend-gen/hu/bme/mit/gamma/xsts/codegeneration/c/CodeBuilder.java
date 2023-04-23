@@ -24,7 +24,7 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
-public class CodeBuilder {
+public class CodeBuilder implements IStatechartCode {
   private XSTS xsts;
 
   private String name;
@@ -48,19 +48,21 @@ public class CodeBuilder {
   public CodeBuilder(final XSTS xsts) {
     this.xsts = xsts;
     this.name = StringExtensions.toFirstUpper(xsts.getName());
+    this.stName = (this.name + "Statechart");
     CodeModel _codeModel = new CodeModel(this.name);
     this.code = _codeModel;
     TestModel _testModel = new TestModel(this.name);
     this.test = _testModel;
     HeaderModel _headerModel = new HeaderModel(this.name);
     this.header = _headerModel;
-    this.stName = (this.name + "Statechart");
     final Consumer<VariableDeclaration> _function = (VariableDeclaration variableDeclaration) -> {
       CodeBuilder.componentVariables.add(variableDeclaration.getName());
     };
     xsts.getVariableDeclarations().forEach(_function);
+    this.constructTest();
   }
 
+  @Override
   public void constructHeader() {
     StringConcatenation _builder = new StringConcatenation();
     {
@@ -189,6 +191,7 @@ public class CodeBuilder {
     this.header.addContent(_builder_3.toString());
   }
 
+  @Override
   public void constructCode() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("/* Reset component ");
@@ -410,6 +413,7 @@ public class CodeBuilder {
     this.test.addContent(_builder_1.toString());
   }
 
+  @Override
   public void save(final URI uri) {
     try {
       URI local = uri.appendSegment("src-gen");

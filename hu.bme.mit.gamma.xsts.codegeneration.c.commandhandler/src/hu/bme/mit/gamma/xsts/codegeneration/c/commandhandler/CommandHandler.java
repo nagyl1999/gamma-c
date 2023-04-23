@@ -1,6 +1,7 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c.commandhandler;
 
 import java.io.File;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,12 +59,18 @@ public class CommandHandler extends AbstractHandler {
 		
 		LOGGER.info("XSTS model " + xsts.getName() + " successfully read.");
 		
+		/* define what to generate */
+		List<IStatechartCode> generate = List.of(
+			new CodeBuilder(xsts),
+			new WrapperBuilder(xsts)
+		);
+		
 		/* build c code */
-		CodeBuilder builder = new CodeBuilder(xsts);
-		builder.constructHeader();
-		builder.constructCode();
-		builder.constructTest();
-		builder.save(root);
+		for (IStatechartCode builder : generate) {
+			builder.constructHeader();
+			builder.constructCode();
+			builder.save(root);
+		}
 		
 		LOGGER.info("C code from model " + xsts.getName() + " successfully created.");
 		
