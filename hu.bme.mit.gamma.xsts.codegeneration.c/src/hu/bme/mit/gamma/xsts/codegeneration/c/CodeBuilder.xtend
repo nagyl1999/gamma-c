@@ -185,7 +185,6 @@ class CodeBuilder implements IStatechartCode {
 		code.save(local);
 		test.save(local);
 		header.save(local);
-		
 	}
 	
 }
