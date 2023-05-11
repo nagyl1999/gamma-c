@@ -157,13 +157,13 @@ class CodeBuilder implements IStatechartCode {
 			int main() {
 				«stName» statechart;
 				
-				resetSystemStatechart(&statechart);
-				initializeSystemStatechart(&statechart);
-				entryEventsSystemStatechart(&statechart);
+				reset«stName»(&statechart);
+				initialize«stName»(&statechart);
+				entryEvents«stName»(&statechart);
 				
 				while (1) {
 					printStates(&statechart);
-					runCycleSystemStatechart(&statechart);
+					runCycle«stName»(&statechart);
 					sleep(1);
 				}
 			}

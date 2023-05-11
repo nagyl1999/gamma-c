@@ -4,6 +4,7 @@ import hu.bme.mit.gamma.xsts.derivedfeatures.XstsDerivedFeatures;
 import hu.bme.mit.gamma.xsts.model.Action;
 import hu.bme.mit.gamma.xsts.model.AssignmentAction;
 import hu.bme.mit.gamma.xsts.model.EmptyAction;
+import hu.bme.mit.gamma.xsts.model.HavocAction;
 import hu.bme.mit.gamma.xsts.model.IfAction;
 import hu.bme.mit.gamma.xsts.model.NonDeterministicAction;
 import hu.bme.mit.gamma.xsts.model.ParallelAction;
@@ -19,6 +20,8 @@ import org.eclipse.xtend2.lib.StringConcatenation;
  */
 @SuppressWarnings("all")
 public class ActionSerializer {
+  private final HavocSerializer havocSerializer = new HavocSerializer();
+
   private final ExpressionSerializer expressionSerializer = new ExpressionSerializer();
 
   private final TypeDeclarationSerializer typeDeclarationSerializer = new TypeDeclarationSerializer();
@@ -148,6 +151,17 @@ public class ActionSerializer {
     return _builder;
   }
 
+  protected CharSequence _serialize(final HavocAction action) {
+    StringConcatenation _builder = new StringConcatenation();
+    String _serialize = this.expressionSerializer.serialize(action.getLhs());
+    _builder.append(_serialize);
+    _builder.append(" = ");
+    String _serialize_1 = this.havocSerializer.serialize(action.getLhs());
+    _builder.append(_serialize_1);
+    _builder.append(";");
+    return _builder;
+  }
+
   /**
    * Serializes an AssignmentAction.
    * 
@@ -197,6 +211,8 @@ public class ActionSerializer {
   public CharSequence serialize(final Action action) {
     if (action instanceof AssignmentAction) {
       return _serialize((AssignmentAction)action);
+    } else if (action instanceof HavocAction) {
+      return _serialize((HavocAction)action);
     } else if (action instanceof NonDeterministicAction) {
       return _serialize((NonDeterministicAction)action);
     } else if (action instanceof ParallelAction) {

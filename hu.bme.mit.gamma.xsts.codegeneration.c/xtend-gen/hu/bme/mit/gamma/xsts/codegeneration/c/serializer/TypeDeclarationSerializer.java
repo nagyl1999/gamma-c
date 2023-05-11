@@ -5,14 +5,36 @@ import hu.bme.mit.gamma.expression.model.EnumerationTypeDefinition;
 import hu.bme.mit.gamma.expression.model.Type;
 import hu.bme.mit.gamma.expression.model.TypeDeclaration;
 import java.util.Arrays;
+import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.Conversions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.xtext.xbase.lib.ListExtensions;
+import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 /**
  * A serializer for type declarations.
  */
 @SuppressWarnings("all")
 public class TypeDeclarationSerializer {
+  /**
+   * Transforms a string with underscores to camel case by converting each word's first letter
+   * after an underscore to uppercase.
+   * 
+   * @param input the string to transform
+   * @return the transformed string in camel case
+   */
+  public String transformString(final String input) {
+    final String[] parts = input.split("_");
+    final Function1<String, String> _function = (String it) -> {
+      return StringExtensions.toFirstUpper(it);
+    };
+    final List<String> transformedParts = ListExtensions.<String, String>map(((List<String>)Conversions.doWrapArray(parts)), _function);
+    return IterableExtensions.join(transformedParts, "_");
+  }
+
   /**
    * Serializes an enumeration type definition.
    * 
@@ -27,7 +49,8 @@ public class TypeDeclarationSerializer {
     _builder.append(" */");
     _builder.newLineIfNotEmpty();
     _builder.append("enum ");
-    _builder.append(name);
+    String _transformString = this.transformString(name);
+    _builder.append(_transformString);
     _builder.append(" {");
     _builder.newLineIfNotEmpty();
     _builder.append("\t");

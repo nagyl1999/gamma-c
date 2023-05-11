@@ -11,6 +11,7 @@ import static extension hu.bme.mit.gamma.xsts.derivedfeatures.XstsDerivedFeature
  */
 class ActionSerializer {
 	
+	private final HavocSerializer havocSerializer = new HavocSerializer;
 	private final ExpressionSerializer expressionSerializer = new ExpressionSerializer;
 	private final TypeDeclarationSerializer typeDeclarationSerializer = new TypeDeclarationSerializer;
 	private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
@@ -79,6 +80,10 @@ class ActionSerializer {
 	 */
 	def dispatch CharSequence serialize(NonDeterministicAction action) {
 		return '''«FOR xstsSubaction : action.actions SEPARATOR '\n'»«xstsSubaction.serialize»«ENDFOR»''';
+	}
+	
+	def dispatch CharSequence serialize(HavocAction action) {
+		return '''«expressionSerializer.serialize(action.lhs)» = «havocSerializer.serialize(action.lhs)»;''';
 	}
 	
 	/**
