@@ -1,0 +1,74 @@
+% !TeX spellcheck = en_EN
+% !TeX encoding = UTF-8
+% !TeX program = xelatex
+
+%----------------------------------------------------------------------------
+\chapter{\hatter}
+
+The second chapter provides the contextual information needed to comprehend the work presented. It commences by introducing model-driven development, specifically statecharts, in Section 2.1. The Gamma Statechart Composition Framework, a modeling tool employed in this paper, is then described in Section 2.2. The chapter also describes the XSTS Language used by the code generator (Section 2.3), and how it corresponds to the C language. The chapter concludes with Section 2.4, which presents modeling tools and approaches related to the work.
+
+%----------------------------------------------------------------------------
+\section{Introduction to Model-Driven Development}
+%----------------------------------------------------------------------------
+
+Model-driven development (MDD) (or model-driven software engineering) is a software engineering methodology that draws attention to the use of models to represent the requirements, design, and implementation of software systems. Instead of writing code directly, developers create high-level models that describe the system's behavior and structure, and then use tools to generate the code automatically.
+
+In this chapter, we will discuss statecharts, a modeling technique used in model-driven development. Statecharts are visual representations of state machines, which provide a high-level abstraction of a system's behavior.
+
+\textbf{Definition.} The mathematical definition of state machine M can be M = $(\Sigma, S, s_0, \delta, F)$.
+
+\begin{itemize}
+	\item $\Sigma$ is the input alphabet (a finite non-empty set of symbols)
+	\item $S$ is a finite non-empty set of states
+	\item $s_0 \in S$ is the initial state
+	\item $\delta$ is the state-transition function: $\delta:S \times \Sigma \rightarrow S$ (in a nondeterministic finite automaton it would be $\delta:S \times \Sigma \rightarrow \mathcal{P}(S)$, i.e. $\delta$ would return a set of states)
+	\item $F$ is the set of final states, a (possibly empty) subset of $S$
+\end{itemize}
+
+\newpage
+
+%----------------------------------------------------------------------------
+\section{Introduction to Gamma}
+%----------------------------------------------------------------------------
+
+The Gamma Statechart Composition Framework is an Eclipse-based, integrated modeling and analysis toolset for the component-based design of reactive systems. The framework intentionally reuses statechart models of existing tools and their respective code generators for individual components. As a core functionality, it provides a composition language that supports the interconnection of statechart components in a hierarchical way. In addition to modeling, Gamma provides automated code generators for both atomic statechart and composite models and also support system-level formal verification and validation by mapping statechart and composition models into formal models of various model checkers and back-annotating the results. The framework also provides test generation functionalities for the interactions between the components using the integrated model checker back-ends.
+
+This work centers on enhancing Gamma's capabilities by enabling the generation of C code from statecharts and compositions of statecharts.
+
+%----------------------------------------------------------------------------
+\section{Gamma Compositions}
+%----------------------------------------------------------------------------
+
+The Gamma framework supports synchronous and asynchronous compositions to define the behavior of components. For code generation, only synchronous compositions are being used.
+
+\subsection{Synchronous}
+
+The synchronous-reactive composition defines that the components run in parallel, their inputs are read at the beginning of the cycle, so there is no communication within the cycle. The cascade composition defines that the components run in discrete times, one after the other - by default in the order of declaration. Their inputs are read just before execution, so communication within the cycle is possible. A component can be executed multiple times within one cycle.
+
+\subsection{Asynchronous}
+
+The asynchronous-reactive composition defines that the components run in parallel, the communication goes through message queues, which behave as a FIFO data structure, but a priority-based solution is also possible. If the storage is full, any further incoming message is ignored.
+
+\newpage
+
+%----------------------------------------------------------------------------
+\section{Related Tools}
+%----------------------------------------------------------------------------
+
+\subsection{Yakindu Statechart Tools}
+
+For statecharts, we use Yakindu, which is a modeling tool that provides support for the development of reactive, event-driven systems based on the concept of state machines. The elements that Yakindu provides to represent a statechart include regions, states, transitions, events, and actions. States represent the different states that a system can be in, and transitions represent the possible transitions between those states. Events represent the triggers that cause state transitions, and actions represent the behavior that is executed when a transition occurs. Guards are used to ensure that a transition can only occur if a certain condition is met. Initial, shallow, and deep history states are special types of states in a statechart that have distinct behaviors and are used to define the initial state and the memory of the machine.
+
+\subsection{Eclipse EMF}
+
+Eclipse EMF (Eclipse Modeling Framework) is a widely-used modeling and code generation framework for developing applications based on structured data models. It provides an infrastructure for creating and managing structured data models using a metamodel, which defines the structure and constraints of a model.
+
+EMF is used to implement the XSTS Language, providing a collection of XSTS elements for constructing XSTS models. These elements are utilized to construct a low-level representation of statecharts or compositions of statecharts. The EMF implementation also provides support for serialization and deserialization of XSTS models in XML, as well as a framework for generating code from the models using templates.
+
+%----------------------------------------------------------------------------
+\section{The XSTS Language}
+%----------------------------------------------------------------------------
+
+The EXtended Symbolic Transition Systems (XSTS) formalism is an intermediate representation aiming to represent reactive systems. It is an extension of the symbolic transition systems (STS) formalism, which is a low-level representation. XSTS introduces an imperative layer above the SMT formulas of STS models, making it easier to transform high-level engineering models into XSTS and map them to different tools, such as model checker back-ends and code generators.
+
+An XSTS model starts with custom type declarations, similar to enum types in programming languages, which are generated for each region of the statechart model with their contained states as literals. It is followed by global variable declarations with integer, boolean, and custom types, including array types. The behavior of the system is defined by three atomic transitions: init, env, and trans. The init transition initializes the system, while the env transition describes the behavior of the system's environment. The trans transition describes the system's internal behavior and alternates with the env transition. The statements within each transition define the detailed behavior of the system, such as assigning values to variables, acting as guards, or creating transient variables. The language also supports composite statements that contain other statements, such as sequences, choice statements, parallel statements, if-else statements, and for loops over ranges.
