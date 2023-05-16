@@ -21,11 +21,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 @SuppressWarnings("all")
 public class VariableDiagnoser {
-  public static final VariableDiagnoser INSTANCE = new VariableDiagnoser();
-
-  protected VariableDiagnoser() {
-  }
-
   public Iterable<VariableDeclaration> retrieveInEvents(final XSTS xSts) {
     final Function1<VariableGroup, Boolean> _function = (VariableGroup it) -> {
       GroupAnnotation _annotation = it.getAnnotation();

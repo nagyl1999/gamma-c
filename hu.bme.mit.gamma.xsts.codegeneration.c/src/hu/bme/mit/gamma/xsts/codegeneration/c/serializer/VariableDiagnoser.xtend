@@ -14,10 +14,6 @@ import hu.bme.mit.gamma.xsts.model.TimeoutGroup
 import hu.bme.mit.gamma.xsts.model.XSTS
 
 class VariableDiagnoser {
-	// Singleton
-	public static final VariableDiagnoser INSTANCE = new VariableDiagnoser
-	protected new() {}
-	//
 	
 	def retrieveInEvents(XSTS xSts) {
 		return xSts.variableGroups
