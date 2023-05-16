@@ -14,6 +14,7 @@ class HeaderModel extends FileModel {
 		super('''«name.toLowerCase».h''');
 		this.content = '''
 			#include <stdbool.h>
+			#include <sys/time.h>
 			
 			/* header guard */
 			#ifndef «name.toUpperCase»_HEADER

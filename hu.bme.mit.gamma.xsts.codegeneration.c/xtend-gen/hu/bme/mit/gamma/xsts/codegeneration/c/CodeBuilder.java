@@ -380,7 +380,6 @@ public class CodeBuilder implements IStatechartCode {
     _builder_1.append(this.stName, "\t");
     _builder_1.append(" statechart;");
     _builder_1.newLineIfNotEmpty();
-    _builder_1.append("\t");
     _builder_1.newLine();
     _builder_1.append("\t");
     _builder_1.append("reset");
@@ -397,7 +396,6 @@ public class CodeBuilder implements IStatechartCode {
     _builder_1.append(this.stName, "\t");
     _builder_1.append("(&statechart);");
     _builder_1.newLineIfNotEmpty();
-    _builder_1.append("\t");
     _builder_1.newLine();
     _builder_1.append("\t");
     _builder_1.append("while (1) {");

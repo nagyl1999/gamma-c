@@ -51,6 +51,7 @@ class WrapperBuilder implements IStatechartCode {
 			/* Wrapper for statechart «stName» */
 			typedef struct {
 				«stName» «stName.toLowerCase»;
+				struct timeval tval_before, tval_after, tval_result;
 			} «name»;
 		''');
 		
@@ -58,6 +59,8 @@ class WrapperBuilder implements IStatechartCode {
 		header.addContent('''
 			/* Initialize component «name» */
 			void initialize«name»(«name» *statechart);
+			/* Calculate Timeout events */
+			void time«name»(«name»* statechart);
 			/* Run cycle of component «name» */
 			void runCycle«name»(«name»* statechart);
 		''');
@@ -89,13 +92,27 @@ class WrapperBuilder implements IStatechartCode {
 		code.addContent('''
 			/* Initialize component «name» */
 			void initialize«name»(«name»* statechart) {
+				gettimeofday(&statechart->tval_before, NULL);  // start measuring time during initialization
 				reset«stName»(&statechart->«stName.toLowerCase»);
 				initialize«stName»(&statechart->«stName.toLowerCase»);
 				entryEvents«stName»(&statechart->«stName.toLowerCase»);
 			}
 			
+			/* Calculate Timeout events */
+			void time«name»(«name»* statechart) {
+				gettimeofday(&statechart->tval_after, NULL);
+				timersub(&statechart->tval_after, &statechart->tval_before, &statechart->tval_result);
+				int milliseconds = (int)statechart->tval_result.tv_sec * 1000 + (int)statechart->tval_result.tv_usec / 1000;
+				«FOR variable : variableDiagnoser.retrieveTimeouts(xsts) SEPARATOR '\n'»
+					/* Add elapsed time to timeout variable «variable.name» */
+					statechart->«stName.toLowerCase».«variable.name» += milliseconds;
+				«ENDFOR»
+				gettimeofday(&statechart->tval_before, NULL);
+			}
+			
 			/* Run cycle of component «name» */
 			void runCycle«name»(«name»* statechart) {
+				time«name»(statechart);
 				runCycle«stName»(&statechart->«stName.toLowerCase»);
 			}
 		''');

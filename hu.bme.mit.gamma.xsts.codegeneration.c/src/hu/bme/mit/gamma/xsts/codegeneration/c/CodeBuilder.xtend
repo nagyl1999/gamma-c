@@ -156,11 +156,11 @@ class CodeBuilder implements IStatechartCode {
 			/* Main function */
 			int main() {
 				«stName» statechart;
-				
+			
 				reset«stName»(&statechart);
 				initialize«stName»(&statechart);
 				entryEvents«stName»(&statechart);
-				
+			
 				while (1) {
 					printStates(&statechart);
 					runCycle«stName»(&statechart);
