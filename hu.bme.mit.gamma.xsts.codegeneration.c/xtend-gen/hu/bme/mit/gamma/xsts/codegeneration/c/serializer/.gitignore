@@ -6,3 +6,6 @@
 /.VariableDeclarationSerializer.xtendbin
 /.VariableDiagnoser.java._trace
 /.HavocSerializer.java._trace
+/.HavocSerializer.xtendbin
+/HavocSerializer.java
+/.TimerSelector.java._trace

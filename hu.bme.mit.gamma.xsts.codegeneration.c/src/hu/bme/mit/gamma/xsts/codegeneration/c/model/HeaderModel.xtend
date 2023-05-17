@@ -1,9 +1,16 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c.model
 
+import java.util.ArrayList;
+
 /**
  * Represents a C header file model.
  */
 class HeaderModel extends FileModel {
+	
+	/**
+	 * Extra headers apart from the basic imports
+	 */
+	private ArrayList<String> headers = new ArrayList();
 	
 	/**
      * Creates a new HeaderModel instance with the given name.
@@ -14,7 +21,7 @@ class HeaderModel extends FileModel {
 		super('''«name.toLowerCase».h''');
 		this.content = '''
 			#include <stdbool.h>
-			#include <sys/time.h>
+			«FOR header : headers SEPARATOR '\n'»«header»«ENDFOR»
 			
 			/* header guard */
 			#ifndef «name.toUpperCase»_HEADER

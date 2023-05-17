@@ -82,6 +82,12 @@ class ActionSerializer {
 		return '''«FOR xstsSubaction : action.actions SEPARATOR '\n'»«xstsSubaction.serialize»«ENDFOR»''';
 	}
 	
+	/**
+	 * Serializes a HavocAction.
+	 * 
+	 * @param action a HavocAction
+	 * @return a CharSequence that represents the serialized HavocAction
+	 */
 	def dispatch CharSequence serialize(HavocAction action) {
 		return '''«expressionSerializer.serialize(action.lhs)» = «havocSerializer.serialize(action.lhs)»;''';
 	}

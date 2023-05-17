@@ -151,6 +151,12 @@ public class ActionSerializer {
     return _builder;
   }
 
+  /**
+   * Serializes a HavocAction.
+   * 
+   * @param action a HavocAction
+   * @return a CharSequence that represents the serialized HavocAction
+   */
   protected CharSequence _serialize(final HavocAction action) {
     StringConcatenation _builder = new StringConcatenation();
     String _serialize = this.expressionSerializer.serialize(action.getLhs());

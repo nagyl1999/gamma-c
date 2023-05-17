@@ -36,7 +36,7 @@ class WrapperBuilder implements IStatechartCode {
 		/* in & out events and parameters in a unique set */
 		inputs.addAll(variableDiagnoser.retrieveInEvents(xsts));
 		inputs.addAll(variableDiagnoser.retrieveInEventParameters(xsts));
-		outputs.addAll(variableDiagnoser.retrieveOutEvents(xsts));
+		outputs.addAll(variableDiagnoser.retrieveOutEvents(xsts) );
 		outputs.addAll(variableDiagnoser.retrieveOutEventParameters(xsts));
 	}
 	
