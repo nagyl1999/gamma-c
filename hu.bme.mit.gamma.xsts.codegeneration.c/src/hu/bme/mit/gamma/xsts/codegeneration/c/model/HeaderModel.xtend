@@ -21,7 +21,6 @@ class HeaderModel extends FileModel {
 		super('''«name.toLowerCase».h''');
 		this.content = '''
 			#include <stdbool.h>
-			#include <sys/time.h>
 			«FOR header : headers SEPARATOR '\n'»«header»«ENDFOR»
 			
 			/* header guard */

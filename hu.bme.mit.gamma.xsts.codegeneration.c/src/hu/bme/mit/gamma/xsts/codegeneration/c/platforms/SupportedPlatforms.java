@@ -5,5 +5,4 @@ package hu.bme.mit.gamma.xsts.codegeneration.c.platforms;
  */
 public enum SupportedPlatforms {
 	UNIX,
-	WINDOWS,
 }

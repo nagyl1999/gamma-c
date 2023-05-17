@@ -19,7 +19,15 @@ interface IPlatform {
 	public def String getStruct();
 	
 	/**
-     * Returns the timer specific to the platform.
+     * Returns the timer initialization specific to the platform.
+     * 
+     * @return the initialization as a string
+     */
+	public def String getInitialization();
+	
+	/**
+     * Returns the timer specific to the platform. All platforms
+     * should use 'milliseconds' indicating the elapsed time.
      * 
      * @return the timer as a string
      */
