@@ -8,11 +8,6 @@ import java.util.ArrayList;
 class HeaderModel extends FileModel {
 	
 	/**
-	 * Extra headers apart from the basic imports
-	 */
-	private ArrayList<String> headers = new ArrayList();
-	
-	/**
      * Creates a new HeaderModel instance with the given name.
      * 
      * @param name the name of the header file
@@ -21,7 +16,6 @@ class HeaderModel extends FileModel {
 		super('''«name.toLowerCase».h''');
 		this.content = '''
 			#include <stdbool.h>
-			«FOR header : headers SEPARATOR '\n'»«header»«ENDFOR»
 			
 			/* header guard */
 			#ifndef «name.toUpperCase»_HEADER

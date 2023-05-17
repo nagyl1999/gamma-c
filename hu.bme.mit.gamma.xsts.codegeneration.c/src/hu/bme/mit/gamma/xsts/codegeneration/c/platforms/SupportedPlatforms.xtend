@@ -39,7 +39,7 @@ class Platforms {
      * @param platform The supported platform.
      * @return The platform instance.
      */
-	public static def get(SupportedPlatforms platform) {
+	public static def IPlatform get(SupportedPlatforms platform) {
 		return platforms.get(platform);
 	}
 	

@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import hu.bme.mit.gamma.expression.model.VariableDeclaration;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel;
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms;
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDiagnoser;
@@ -65,112 +66,118 @@ public class WrapperBuilder implements IStatechartCode {
   @Override
   public void constructHeader() {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("#include \"");
-    String _lowerCase = this.xsts.getName().toLowerCase();
-    _builder.append(_lowerCase);
-    _builder.append(".h\"");
+    String _headers = Platforms.get(this.platform).getHeaders();
+    _builder.append(_headers);
     _builder.newLineIfNotEmpty();
     this.header.addContent(_builder.toString());
     StringConcatenation _builder_1 = new StringConcatenation();
-    _builder_1.append("/* Wrapper for statechart ");
-    _builder_1.append(this.stName);
-    _builder_1.append(" */");
-    _builder_1.newLineIfNotEmpty();
-    _builder_1.append("typedef struct {");
-    _builder_1.newLine();
-    _builder_1.append("\t");
-    _builder_1.append(this.stName, "\t");
-    _builder_1.append(" ");
-    String _lowerCase_1 = this.stName.toLowerCase();
-    _builder_1.append(_lowerCase_1, "\t");
-    _builder_1.append(";");
-    _builder_1.newLineIfNotEmpty();
-    _builder_1.append("\t");
-    _builder_1.append("struct timeval tval_before, tval_after, tval_result;");
-    _builder_1.newLine();
-    _builder_1.append("} ");
-    _builder_1.append(this.name);
-    _builder_1.append(";");
+    _builder_1.append("#include \"");
+    String _lowerCase = this.xsts.getName().toLowerCase();
+    _builder_1.append(_lowerCase);
+    _builder_1.append(".h\"");
     _builder_1.newLineIfNotEmpty();
     this.header.addContent(_builder_1.toString());
     StringConcatenation _builder_2 = new StringConcatenation();
-    _builder_2.append("/* Initialize component ");
-    _builder_2.append(this.name);
+    _builder_2.append("/* Wrapper for statechart ");
+    _builder_2.append(this.stName);
     _builder_2.append(" */");
     _builder_2.newLineIfNotEmpty();
-    _builder_2.append("void initialize");
-    _builder_2.append(this.name);
-    _builder_2.append("(");
-    _builder_2.append(this.name);
-    _builder_2.append(" *statechart);");
-    _builder_2.newLineIfNotEmpty();
-    _builder_2.append("/* Calculate Timeout events */");
+    _builder_2.append("typedef struct {");
     _builder_2.newLine();
-    _builder_2.append("void time");
-    _builder_2.append(this.name);
-    _builder_2.append("(");
-    _builder_2.append(this.name);
-    _builder_2.append("* statechart);");
+    _builder_2.append("\t");
+    _builder_2.append(this.stName, "\t");
+    _builder_2.append(" ");
+    String _lowerCase_1 = this.stName.toLowerCase();
+    _builder_2.append(_lowerCase_1, "\t");
+    _builder_2.append(";");
     _builder_2.newLineIfNotEmpty();
-    _builder_2.append("/* Run cycle of component ");
-    _builder_2.append(this.name);
-    _builder_2.append(" */");
+    _builder_2.append("\t");
+    String _struct = Platforms.get(this.platform).getStruct();
+    _builder_2.append(_struct, "\t");
     _builder_2.newLineIfNotEmpty();
-    _builder_2.append("void runCycle");
+    _builder_2.append("} ");
     _builder_2.append(this.name);
-    _builder_2.append("(");
-    _builder_2.append(this.name);
-    _builder_2.append("* statechart);");
+    _builder_2.append(";");
     _builder_2.newLineIfNotEmpty();
     this.header.addContent(_builder_2.toString());
     StringConcatenation _builder_3 = new StringConcatenation();
-    {
-      for(final VariableDeclaration variable : this.inputs) {
-        _builder_3.append("/* Setter for ");
-        String _firstUpper = StringExtensions.toFirstUpper(variable.getName());
-        _builder_3.append(_firstUpper);
-        _builder_3.append(" */");
-        _builder_3.newLineIfNotEmpty();
-        _builder_3.append("void set");
-        String _firstUpper_1 = StringExtensions.toFirstUpper(variable.getName());
-        _builder_3.append(_firstUpper_1);
-        _builder_3.append("(");
-        _builder_3.append(this.name);
-        _builder_3.append("* statechart, ");
-        String _serialize = this.variableDeclarationSerializer.serialize(variable.getType(), variable.getName());
-        _builder_3.append(_serialize);
-        _builder_3.append(" value);");
-        _builder_3.newLineIfNotEmpty();
-      }
-    }
+    _builder_3.append("/* Initialize component ");
+    _builder_3.append(this.name);
+    _builder_3.append(" */");
+    _builder_3.newLineIfNotEmpty();
+    _builder_3.append("void initialize");
+    _builder_3.append(this.name);
+    _builder_3.append("(");
+    _builder_3.append(this.name);
+    _builder_3.append(" *statechart);");
+    _builder_3.newLineIfNotEmpty();
+    _builder_3.append("/* Calculate Timeout events */");
+    _builder_3.newLine();
+    _builder_3.append("void time");
+    _builder_3.append(this.name);
+    _builder_3.append("(");
+    _builder_3.append(this.name);
+    _builder_3.append("* statechart);");
+    _builder_3.newLineIfNotEmpty();
+    _builder_3.append("/* Run cycle of component ");
+    _builder_3.append(this.name);
+    _builder_3.append(" */");
+    _builder_3.newLineIfNotEmpty();
+    _builder_3.append("void runCycle");
+    _builder_3.append(this.name);
+    _builder_3.append("(");
+    _builder_3.append(this.name);
+    _builder_3.append("* statechart);");
+    _builder_3.newLineIfNotEmpty();
     this.header.addContent(_builder_3.toString());
     StringConcatenation _builder_4 = new StringConcatenation();
     {
-      for(final VariableDeclaration variable_1 : this.outputs) {
-        _builder_4.append("/* Getter for ");
-        String _firstUpper_2 = StringExtensions.toFirstUpper(variable_1.getName());
-        _builder_4.append(_firstUpper_2);
+      for(final VariableDeclaration variable : this.inputs) {
+        _builder_4.append("/* Setter for ");
+        String _firstUpper = StringExtensions.toFirstUpper(variable.getName());
+        _builder_4.append(_firstUpper);
         _builder_4.append(" */");
         _builder_4.newLineIfNotEmpty();
-        String _serialize_1 = this.variableDeclarationSerializer.serialize(variable_1.getType(), variable_1.getName());
-        _builder_4.append(_serialize_1);
-        _builder_4.append(" get");
-        String _firstUpper_3 = StringExtensions.toFirstUpper(variable_1.getName());
-        _builder_4.append(_firstUpper_3);
+        _builder_4.append("void set");
+        String _firstUpper_1 = StringExtensions.toFirstUpper(variable.getName());
+        _builder_4.append(_firstUpper_1);
         _builder_4.append("(");
         _builder_4.append(this.name);
-        _builder_4.append("* statechart);");
+        _builder_4.append("* statechart, ");
+        String _serialize = this.variableDeclarationSerializer.serialize(variable.getType(), variable.getName());
+        _builder_4.append(_serialize);
+        _builder_4.append(" value);");
         _builder_4.newLineIfNotEmpty();
       }
     }
     this.header.addContent(_builder_4.toString());
     StringConcatenation _builder_5 = new StringConcatenation();
-    _builder_5.append("#endif /* ");
-    String _upperCase = this.name.toUpperCase();
-    _builder_5.append(_upperCase);
-    _builder_5.append("_HEADER */");
-    _builder_5.newLineIfNotEmpty();
+    {
+      for(final VariableDeclaration variable_1 : this.outputs) {
+        _builder_5.append("/* Getter for ");
+        String _firstUpper_2 = StringExtensions.toFirstUpper(variable_1.getName());
+        _builder_5.append(_firstUpper_2);
+        _builder_5.append(" */");
+        _builder_5.newLineIfNotEmpty();
+        String _serialize_1 = this.variableDeclarationSerializer.serialize(variable_1.getType(), variable_1.getName());
+        _builder_5.append(_serialize_1);
+        _builder_5.append(" get");
+        String _firstUpper_3 = StringExtensions.toFirstUpper(variable_1.getName());
+        _builder_5.append(_firstUpper_3);
+        _builder_5.append("(");
+        _builder_5.append(this.name);
+        _builder_5.append("* statechart);");
+        _builder_5.newLineIfNotEmpty();
+      }
+    }
     this.header.addContent(_builder_5.toString());
+    StringConcatenation _builder_6 = new StringConcatenation();
+    _builder_6.append("#endif /* ");
+    String _upperCase = this.name.toUpperCase();
+    _builder_6.append(_upperCase);
+    _builder_6.append("_HEADER */");
+    _builder_6.newLineIfNotEmpty();
+    this.header.addContent(_builder_6.toString());
   }
 
   @Override
@@ -187,8 +194,9 @@ public class WrapperBuilder implements IStatechartCode {
     _builder.append("* statechart) {");
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
-    _builder.append("gettimeofday(&statechart->tval_before, NULL);  // start measuring time during initialization");
-    _builder.newLine();
+    String _initialization = Platforms.get(this.platform).getInitialization();
+    _builder.append(_initialization, "\t");
+    _builder.newLineIfNotEmpty();
     _builder.append("\t");
     _builder.append("reset");
     _builder.append(this.stName, "\t");
@@ -225,14 +233,9 @@ public class WrapperBuilder implements IStatechartCode {
     _builder.append("* statechart) {");
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
-    _builder.append("gettimeofday(&statechart->tval_after, NULL);");
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.append("timersub(&statechart->tval_after, &statechart->tval_before, &statechart->tval_result);");
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.append("int milliseconds = (int)statechart->tval_result.tv_sec * 1000 + (int)statechart->tval_result.tv_usec / 1000;");
-    _builder.newLine();
+    String _timer = Platforms.get(this.platform).getTimer();
+    _builder.append(_timer, "\t");
+    _builder.newLineIfNotEmpty();
     {
       Iterable<VariableDeclaration> _retrieveTimeouts = this.variableDiagnoser.retrieveTimeouts(this.xsts);
       boolean _hasElements = false;
@@ -259,9 +262,6 @@ public class WrapperBuilder implements IStatechartCode {
         _builder.newLineIfNotEmpty();
       }
     }
-    _builder.append("\t");
-    _builder.append("gettimeofday(&statechart->tval_before, NULL);");
-    _builder.newLine();
     _builder.append("}");
     _builder.newLine();
     _builder.newLine();

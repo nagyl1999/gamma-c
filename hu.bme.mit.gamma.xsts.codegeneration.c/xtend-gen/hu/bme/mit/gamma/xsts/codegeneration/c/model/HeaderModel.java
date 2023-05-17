@@ -1,6 +1,5 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c.model;
 
-import java.util.ArrayList;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 
@@ -9,11 +8,6 @@ import org.eclipse.xtext.xbase.lib.Functions.Function0;
  */
 @SuppressWarnings("all")
 public class HeaderModel extends FileModel {
-  /**
-   * Extra headers apart from the basic imports
-   */
-  private ArrayList<String> headers = new ArrayList<String>();
-
   /**
    * Creates a new HeaderModel instance with the given name.
    * 
@@ -33,18 +27,6 @@ public class HeaderModel extends FileModel {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("#include <stdbool.h>");
     _builder.newLine();
-    {
-      boolean _hasElements = false;
-      for(final String header : this.headers) {
-        if (!_hasElements) {
-          _hasElements = true;
-        } else {
-          _builder.appendImmediate("\n", "");
-        }
-        _builder.append(header);
-      }
-    }
-    _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("/* header guard */");
     _builder.newLine();

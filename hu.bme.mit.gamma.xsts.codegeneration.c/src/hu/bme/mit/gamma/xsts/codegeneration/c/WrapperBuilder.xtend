@@ -11,6 +11,7 @@ import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDiagnoser
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer
 import hu.bme.mit.gamma.expression.model.VariableDeclaration
 import java.util.HashSet
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
 
 class WrapperBuilder implements IStatechartCode {
@@ -48,6 +49,11 @@ class WrapperBuilder implements IStatechartCode {
 	}
 	
 	override constructHeader() {
+		/* Add extra headers */
+		header.addContent('''
+			«Platforms.get(platform).getHeaders()»
+		''');
+		
 		/* Inculde statechart header */
 		header.addContent('''
 			#include "«xsts.name.toLowerCase».h"
@@ -58,7 +64,7 @@ class WrapperBuilder implements IStatechartCode {
 			/* Wrapper for statechart «stName» */
 			typedef struct {
 				«stName» «stName.toLowerCase»;
-				struct timeval tval_before, tval_after, tval_result;
+				«Platforms.get(platform).getStruct()»
 			} «name»;
 		''');
 		
@@ -99,7 +105,7 @@ class WrapperBuilder implements IStatechartCode {
 		code.addContent('''
 			/* Initialize component «name» */
 			void initialize«name»(«name»* statechart) {
-				gettimeofday(&statechart->tval_before, NULL);  // start measuring time during initialization
+				«Platforms.get(platform).getInitialization()»
 				reset«stName»(&statechart->«stName.toLowerCase»);
 				initialize«stName»(&statechart->«stName.toLowerCase»);
 				entryEvents«stName»(&statechart->«stName.toLowerCase»);
@@ -107,14 +113,11 @@ class WrapperBuilder implements IStatechartCode {
 			
 			/* Calculate Timeout events */
 			void time«name»(«name»* statechart) {
-				gettimeofday(&statechart->tval_after, NULL);
-				timersub(&statechart->tval_after, &statechart->tval_before, &statechart->tval_result);
-				int milliseconds = (int)statechart->tval_result.tv_sec * 1000 + (int)statechart->tval_result.tv_usec / 1000;
+				«Platforms.get(platform).getTimer()»
 				«FOR variable : variableDiagnoser.retrieveTimeouts(xsts) SEPARATOR '\n'»
 					/* Add elapsed time to timeout variable «variable.name» */
 					statechart->«stName.toLowerCase».«variable.name» += milliseconds;
 				«ENDFOR»
-				gettimeofday(&statechart->tval_before, NULL);
 			}
 			
 			/* Run cycle of component «name» */
