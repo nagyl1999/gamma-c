@@ -1,6 +1,7 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c
 
 import org.eclipse.emf.common.util.URI
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
 
 /**
  * An interface for defining statechart code generation behavior.
@@ -22,4 +23,11 @@ interface IStatechartCode {
 	 * @param uri the URI to save the code to
 	 */
 	public def void save(URI uri);
+	
+	/**
+ 	 * Sets the platform for the generator.
+ 	 * 
+ 	 * @param platform the platform to set
+ 	 */
+	public def void setPlatform(SupportedPlatforms platform);
 }

@@ -11,6 +11,7 @@ import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDiagnoser
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer
 import hu.bme.mit.gamma.expression.model.VariableDeclaration
 import java.util.HashSet
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
 
 class WrapperBuilder implements IStatechartCode {
 	
@@ -22,6 +23,8 @@ class WrapperBuilder implements IStatechartCode {
 	
 	private CodeModel code;
 	private HeaderModel header;
+	
+	private SupportedPlatforms platform = SupportedPlatforms.UNIX;
 	
 	private final VariableDiagnoser variableDiagnoser = new VariableDiagnoser;
 	private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
@@ -38,6 +41,10 @@ class WrapperBuilder implements IStatechartCode {
 		inputs.addAll(variableDiagnoser.retrieveInEventParameters(xsts));
 		outputs.addAll(variableDiagnoser.retrieveOutEvents(xsts) );
 		outputs.addAll(variableDiagnoser.retrieveOutEventParameters(xsts));
+	}
+	
+	public override setPlatform(SupportedPlatforms platform) {
+		this.platform = platform;
 	}
 	
 	override constructHeader() {

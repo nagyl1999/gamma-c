@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 import hu.bme.mit.gamma.xsts.model.*;
 import hu.bme.mit.gamma.xsts.codegeneration.c.*;
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms;
 
 public class CommandHandler extends AbstractHandler {
 	
@@ -58,6 +59,9 @@ public class CommandHandler extends AbstractHandler {
 		URI root = getPackageRoot(URI.createURI(file.getLocationURI().toString()));
 		
 		LOGGER.info("XSTS model " + xsts.getName() + " successfully read.");
+		
+		/* define the platform */
+		SupportedPlatforms platform = SupportedPlatforms.UNIX;
 		
 		/* define what to generate */
 		List<IStatechartCode> generate = List.of(

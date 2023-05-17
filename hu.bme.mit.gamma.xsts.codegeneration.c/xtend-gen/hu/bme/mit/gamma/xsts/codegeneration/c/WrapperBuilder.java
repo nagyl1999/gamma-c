@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import hu.bme.mit.gamma.expression.model.VariableDeclaration;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel;
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDiagnoser;
 import hu.bme.mit.gamma.xsts.model.XSTS;
@@ -32,6 +33,8 @@ public class WrapperBuilder implements IStatechartCode {
 
   private HeaderModel header;
 
+  private SupportedPlatforms platform = SupportedPlatforms.UNIX;
+
   private final VariableDiagnoser variableDiagnoser = new VariableDiagnoser();
 
   private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer();
@@ -52,6 +55,11 @@ public class WrapperBuilder implements IStatechartCode {
     Iterables.<VariableDeclaration>addAll(this.inputs, this.variableDiagnoser.retrieveInEventParameters(xsts));
     Iterables.<VariableDeclaration>addAll(this.outputs, this.variableDiagnoser.retrieveOutEvents(xsts));
     Iterables.<VariableDeclaration>addAll(this.outputs, this.variableDiagnoser.retrieveOutEventParameters(xsts));
+  }
+
+  @Override
+  public void setPlatform(final SupportedPlatforms platform) {
+    this.platform = platform;
   }
 
   @Override

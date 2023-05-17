@@ -12,6 +12,7 @@ import org.eclipse.emf.common.util.URI
 import hu.bme.mit.gamma.expression.model.TypeReference
 import java.util.HashSet
 import hu.bme.mit.gamma.expression.model.VariableDeclaration
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
 
 class CodeBuilder implements IStatechartCode {
 	
@@ -22,6 +23,8 @@ class CodeBuilder implements IStatechartCode {
 	private CodeModel code;
 	private TestModel test;
 	private HeaderModel header;
+	
+	private SupportedPlatforms platform = SupportedPlatforms.UNIX;
 	
 	private final ActionSerializer actionSerializer = new ActionSerializer;
 	private final VariableDiagnoser variableDiagnoser = new VariableDiagnoser;
@@ -52,6 +55,10 @@ class CodeBuilder implements IStatechartCode {
 		outputs.addAll(variableDiagnoser.retrieveOutEventParameters(xsts));
 		/* optional */
 		this.constructTest();
+	}
+	
+	public override setPlatform(SupportedPlatforms platform) {
+		this.platform = platform;
 	}
 	
 	public override void constructHeader() {

@@ -8,6 +8,7 @@ import hu.bme.mit.gamma.expression.model.VariableDeclaration;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.TestModel;
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ActionSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ExpressionSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.TypeDeclarationSerializer;
@@ -40,6 +41,8 @@ public class CodeBuilder implements IStatechartCode {
   private TestModel test;
 
   private HeaderModel header;
+
+  private SupportedPlatforms platform = SupportedPlatforms.UNIX;
 
   private final ActionSerializer actionSerializer = new ActionSerializer();
 
@@ -76,6 +79,11 @@ public class CodeBuilder implements IStatechartCode {
     Iterables.<VariableDeclaration>addAll(this.outputs, this.variableDiagnoser.retrieveOutEvents(xsts));
     Iterables.<VariableDeclaration>addAll(this.outputs, this.variableDiagnoser.retrieveOutEventParameters(xsts));
     this.constructTest();
+  }
+
+  @Override
+  public void setPlatform(final SupportedPlatforms platform) {
+    this.platform = platform;
   }
 
   @Override
