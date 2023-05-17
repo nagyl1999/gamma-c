@@ -1,6 +1,12 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c.serializer
 
-import hu.bme.mit.gamma.expression.model.*;
+import hu.bme.mit.gamma.expression.model.BooleanTypeDefinition
+import hu.bme.mit.gamma.expression.model.DecimalTypeDefinition
+import hu.bme.mit.gamma.expression.model.EnumerationTypeDefinition
+import hu.bme.mit.gamma.expression.model.IntegerTypeDefinition
+import hu.bme.mit.gamma.expression.model.RationalTypeDefinition
+import hu.bme.mit.gamma.expression.model.Type
+import hu.bme.mit.gamma.expression.model.TypeReference
 
 /**
  * Serializer for variable declarations.

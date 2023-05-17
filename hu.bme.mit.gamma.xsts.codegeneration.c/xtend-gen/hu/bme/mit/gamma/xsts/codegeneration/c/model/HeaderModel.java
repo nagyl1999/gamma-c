@@ -33,6 +33,8 @@ public class HeaderModel extends FileModel {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("#include <stdbool.h>");
     _builder.newLine();
+    _builder.append("#include <sys/time.h>");
+    _builder.newLine();
     {
       boolean _hasElements = false;
       for(final String header : this.headers) {

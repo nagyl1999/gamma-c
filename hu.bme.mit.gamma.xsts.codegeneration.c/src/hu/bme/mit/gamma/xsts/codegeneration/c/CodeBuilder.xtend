@@ -10,6 +10,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import org.eclipse.emf.common.util.URI
 import hu.bme.mit.gamma.expression.model.TypeReference
+import java.util.HashSet
+import hu.bme.mit.gamma.expression.model.VariableDeclaration
 
 class CodeBuilder implements IStatechartCode {
 	
@@ -22,9 +24,13 @@ class CodeBuilder implements IStatechartCode {
 	private HeaderModel header;
 	
 	private final ActionSerializer actionSerializer = new ActionSerializer;
+	private final VariableDiagnoser variableDiagnoser = new VariableDiagnoser;
+	private final ExpressionSerializer expressionSerializer = new ExpressionSerializer;
 	private final TypeDeclarationSerializer typeDeclarationSerializer = new TypeDeclarationSerializer;
 	private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
 	
+	private HashSet<VariableDeclaration> inputs = new HashSet();
+	private HashSet<VariableDeclaration> outputs = new HashSet();
 	public static ArrayList<String> componentVariables = new ArrayList();
 	
 	public new(XSTS xsts) {
@@ -39,6 +45,11 @@ class CodeBuilder implements IStatechartCode {
 		xsts.variableDeclarations.forEach[variableDeclaration |
     		componentVariables.add(variableDeclaration.name)
 		];
+		/* in & out events and parameters in a unique set */
+		inputs.addAll(variableDiagnoser.retrieveInEvents(xsts));
+		inputs.addAll(variableDiagnoser.retrieveInEventParameters(xsts));
+		outputs.addAll(variableDiagnoser.retrieveOutEvents(xsts) );
+		outputs.addAll(variableDiagnoser.retrieveOutEventParameters(xsts));
 		/* optional */
 		this.constructTest();
 	}
@@ -108,7 +119,7 @@ class CodeBuilder implements IStatechartCode {
 		code.addContent('''
 			/* Clear input events of component «name» */
 			void clearInEvents«stName»(«stName»* statechart) {
-				«actionSerializer.serialize(xsts.inEventTransition.action)»
+				«FOR input : inputs SEPARATOR '\n'»statechart->«input.name» = «expressionSerializer.serialize(input.expression)»;«ENDFOR»
 			}
 		''');
 		
@@ -116,7 +127,7 @@ class CodeBuilder implements IStatechartCode {
 		code.addContent('''
 			/* Clear output events of component «name» */
 			void clearOutEvents«stName»(«stName»* statechart) {
-				«actionSerializer.serialize(xsts.outEventTransition.action)»
+				«FOR output : outputs SEPARATOR '\n'»statechart->«output.name» = «expressionSerializer.serialize(output.expression)»;«ENDFOR»
 			}
 		''');
 		

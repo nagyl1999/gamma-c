@@ -1,5 +1,6 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c;
 
+import com.google.common.collect.Iterables;
 import hu.bme.mit.gamma.expression.model.Type;
 import hu.bme.mit.gamma.expression.model.TypeDeclaration;
 import hu.bme.mit.gamma.expression.model.TypeReference;
@@ -8,14 +9,17 @@ import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.TestModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ActionSerializer;
+import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ExpressionSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.TypeDeclarationSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer;
+import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDiagnoser;
 import hu.bme.mit.gamma.xsts.model.XSTS;
 import hu.bme.mit.gamma.xsts.model.XTransition;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -39,9 +43,17 @@ public class CodeBuilder implements IStatechartCode {
 
   private final ActionSerializer actionSerializer = new ActionSerializer();
 
+  private final VariableDiagnoser variableDiagnoser = new VariableDiagnoser();
+
+  private final ExpressionSerializer expressionSerializer = new ExpressionSerializer();
+
   private final TypeDeclarationSerializer typeDeclarationSerializer = new TypeDeclarationSerializer();
 
   private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer();
+
+  private HashSet<VariableDeclaration> inputs = new HashSet<VariableDeclaration>();
+
+  private HashSet<VariableDeclaration> outputs = new HashSet<VariableDeclaration>();
 
   public static ArrayList<String> componentVariables = new ArrayList<String>();
 
@@ -59,6 +71,10 @@ public class CodeBuilder implements IStatechartCode {
       CodeBuilder.componentVariables.add(variableDeclaration.getName());
     };
     xsts.getVariableDeclarations().forEach(_function);
+    Iterables.<VariableDeclaration>addAll(this.inputs, this.variableDiagnoser.retrieveInEvents(xsts));
+    Iterables.<VariableDeclaration>addAll(this.inputs, this.variableDiagnoser.retrieveInEventParameters(xsts));
+    Iterables.<VariableDeclaration>addAll(this.outputs, this.variableDiagnoser.retrieveOutEvents(xsts));
+    Iterables.<VariableDeclaration>addAll(this.outputs, this.variableDiagnoser.retrieveOutEventParameters(xsts));
     this.constructTest();
   }
 
@@ -259,8 +275,23 @@ public class CodeBuilder implements IStatechartCode {
     _builder_3.append("* statechart) {");
     _builder_3.newLineIfNotEmpty();
     _builder_3.append("\t");
-    CharSequence _serialize_3 = this.actionSerializer.serialize(this.xsts.getInEventTransition().getAction());
-    _builder_3.append(_serialize_3, "\t");
+    {
+      boolean _hasElements = false;
+      for(final VariableDeclaration input : this.inputs) {
+        if (!_hasElements) {
+          _hasElements = true;
+        } else {
+          _builder_3.appendImmediate("\n", "\t");
+        }
+        _builder_3.append("statechart->");
+        String _name = input.getName();
+        _builder_3.append(_name, "\t");
+        _builder_3.append(" = ");
+        String _serialize_3 = this.expressionSerializer.serialize(input.getExpression());
+        _builder_3.append(_serialize_3, "\t");
+        _builder_3.append(";");
+      }
+    }
     _builder_3.newLineIfNotEmpty();
     _builder_3.append("}");
     _builder_3.newLine();
@@ -277,8 +308,23 @@ public class CodeBuilder implements IStatechartCode {
     _builder_4.append("* statechart) {");
     _builder_4.newLineIfNotEmpty();
     _builder_4.append("\t");
-    CharSequence _serialize_4 = this.actionSerializer.serialize(this.xsts.getOutEventTransition().getAction());
-    _builder_4.append(_serialize_4, "\t");
+    {
+      boolean _hasElements_1 = false;
+      for(final VariableDeclaration output : this.outputs) {
+        if (!_hasElements_1) {
+          _hasElements_1 = true;
+        } else {
+          _builder_4.appendImmediate("\n", "\t");
+        }
+        _builder_4.append("statechart->");
+        String _name_1 = output.getName();
+        _builder_4.append(_name_1, "\t");
+        _builder_4.append(" = ");
+        String _serialize_4 = this.expressionSerializer.serialize(output.getExpression());
+        _builder_4.append(_serialize_4, "\t");
+        _builder_4.append(";");
+      }
+    }
     _builder_4.newLineIfNotEmpty();
     _builder_4.append("}");
     _builder_4.newLine();
@@ -297,10 +343,10 @@ public class CodeBuilder implements IStatechartCode {
     _builder_5.append("\t");
     {
       EList<XTransition> _transitions = this.xsts.getTransitions();
-      boolean _hasElements = false;
+      boolean _hasElements_2 = false;
       for(final XTransition transition : _transitions) {
-        if (!_hasElements) {
-          _hasElements = true;
+        if (!_hasElements_2) {
+          _hasElements_2 = true;
         } else {
           _builder_5.appendImmediate("\n", "\t");
         }
