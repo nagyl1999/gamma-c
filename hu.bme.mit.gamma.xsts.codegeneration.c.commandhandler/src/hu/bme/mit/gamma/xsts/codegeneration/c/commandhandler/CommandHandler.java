@@ -71,6 +71,7 @@ public class CommandHandler extends AbstractHandler {
 		
 		/* build c code */
 		for (IStatechartCode builder : generate) {
+			builder.setPlatform(platform);
 			builder.constructHeader();
 			builder.constructCode();
 			builder.save(root);

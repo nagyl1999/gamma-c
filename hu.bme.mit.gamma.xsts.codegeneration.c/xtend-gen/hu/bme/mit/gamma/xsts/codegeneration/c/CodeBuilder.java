@@ -8,6 +8,7 @@ import hu.bme.mit.gamma.expression.model.VariableDeclaration;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.TestModel;
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms;
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ActionSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ExpressionSerializer;
@@ -41,6 +42,8 @@ public class CodeBuilder implements IStatechartCode {
   private TestModel test;
 
   private HeaderModel header;
+
+  private Platforms platforms = new Platforms();
 
   private SupportedPlatforms platform = SupportedPlatforms.UNIX;
 

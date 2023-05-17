@@ -1,8 +1,9 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c.platforms;
 
 /**
- * Supported platforms for the C code generator in the context of timing
+ * Enum representing the supported platforms.
  */
+@SuppressWarnings("all")
 public enum SupportedPlatforms {
-	UNIX,
+  UNIX;
 }

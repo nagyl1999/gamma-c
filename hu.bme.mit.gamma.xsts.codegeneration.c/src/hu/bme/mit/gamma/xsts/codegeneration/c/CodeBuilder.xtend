@@ -6,12 +6,13 @@ import hu.bme.mit.gamma.xsts.codegeneration.c.model.*;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.*;
 
 import java.io.File;
+import java.util.HashSet
 import java.nio.file.Files
 import java.nio.file.Paths
 import org.eclipse.emf.common.util.URI
 import hu.bme.mit.gamma.expression.model.TypeReference
-import java.util.HashSet
 import hu.bme.mit.gamma.expression.model.VariableDeclaration
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
 
 class CodeBuilder implements IStatechartCode {
@@ -24,6 +25,7 @@ class CodeBuilder implements IStatechartCode {
 	private TestModel test;
 	private HeaderModel header;
 	
+	private Platforms platforms = new Platforms;
 	private SupportedPlatforms platform = SupportedPlatforms.UNIX;
 	
 	private final ActionSerializer actionSerializer = new ActionSerializer;
