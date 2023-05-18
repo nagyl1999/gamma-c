@@ -101,8 +101,11 @@ public class CodeBuilder implements IStatechartCode {
         } else {
           _builder.appendImmediate("\n", "");
         }
+        _builder.newLineIfNotEmpty();
         String _serialize = this.typeDeclarationSerializer.serialize(typeDeclaration);
         _builder.append(_serialize);
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t\t");
       }
     }
     this.header.addContent(_builder.toString());
@@ -113,25 +116,19 @@ public class CodeBuilder implements IStatechartCode {
     _builder_1.newLineIfNotEmpty();
     _builder_1.append("typedef struct {");
     _builder_1.newLine();
-    _builder_1.append("\t");
     {
       EList<VariableDeclaration> _variableDeclarations = this.xsts.getVariableDeclarations();
-      boolean _hasElements_1 = false;
       for(final VariableDeclaration variableDeclaration : _variableDeclarations) {
-        if (!_hasElements_1) {
-          _hasElements_1 = true;
-        } else {
-          _builder_1.appendImmediate("\n", "\t");
-        }
+        _builder_1.append("\t");
         String _serialize_1 = this.variableDeclarationSerializer.serialize(variableDeclaration.getType(), variableDeclaration.getName());
         _builder_1.append(_serialize_1, "\t");
         _builder_1.append(" ");
         String _name = variableDeclaration.getName();
         _builder_1.append(_name, "\t");
         _builder_1.append(";");
+        _builder_1.newLineIfNotEmpty();
       }
     }
-    _builder_1.newLineIfNotEmpty();
     _builder_1.append("} ");
     _builder_1.append(this.stName);
     _builder_1.append(";");

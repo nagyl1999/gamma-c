@@ -2,8 +2,16 @@ package hu.bme.mit.gamma.xsts.codegeneration.c.platforms;
 
 import org.eclipse.xtend2.lib.StringConcatenation;
 
+/**
+ * Implementation of the IPlatform interface for Unix platforms.
+ */
 @SuppressWarnings("all")
 public class UnixPlatform implements IPlatform {
+  /**
+   * Returns the headers specific to unix platforms.
+   * 
+   * @return the headers as a string
+   */
   @Override
   public String getHeaders() {
     StringConcatenation _builder = new StringConcatenation();
@@ -11,6 +19,11 @@ public class UnixPlatform implements IPlatform {
     return _builder.toString();
   }
 
+  /**
+   * Returns the part of struct specific to unix platforms.
+   * 
+   * @return the struct as a string
+   */
   @Override
   public String getStruct() {
     StringConcatenation _builder = new StringConcatenation();
@@ -18,6 +31,11 @@ public class UnixPlatform implements IPlatform {
     return _builder.toString();
   }
 
+  /**
+   * Returns the timer initialization specific to unix platforms.
+   * 
+   * @return the initialization as a string
+   */
   @Override
   public String getInitialization() {
     StringConcatenation _builder = new StringConcatenation();
@@ -25,6 +43,11 @@ public class UnixPlatform implements IPlatform {
     return _builder.toString();
   }
 
+  /**
+   * Returns the timer specific to unix platforms.
+   * 
+   * @return the timer as a string
+   */
   @Override
   public String getTimer() {
     StringConcatenation _builder = new StringConcatenation();

@@ -65,13 +65,17 @@ class CodeBuilder implements IStatechartCode {
 	
 	public override void constructHeader() {
 		/* Enum Type Declarations */
-		header.addContent('''«FOR typeDeclaration : xsts.typeDeclarations SEPARATOR '\n'»«typeDeclarationSerializer.serialize(typeDeclaration)»«ENDFOR»''');
+		header.addContent('''«FOR typeDeclaration : xsts.typeDeclarations SEPARATOR '\n'»
+			«typeDeclarationSerializer.serialize(typeDeclaration)»
+		«ENDFOR»''');
 
 		/* Struct Declaration */
 		header.addContent('''
 			/* Structure representing «name» component */
 			typedef struct {
-				«FOR variableDeclaration : xsts.variableDeclarations SEPARATOR '\n'»«variableDeclarationSerializer.serialize(variableDeclaration.type, variableDeclaration.name)» «variableDeclaration.name»;«ENDFOR»
+				«FOR variableDeclaration : xsts.variableDeclarations»
+					«variableDeclarationSerializer.serialize(variableDeclaration.type, variableDeclaration.name)» «variableDeclaration.name»;
+				«ENDFOR»
 			} «stName»;
 		''');
 		
