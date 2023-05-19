@@ -40,11 +40,12 @@ class VariableDeclarationSerializer {
    	 * Throws an IllegalArgumentException since the Type class is not supported.
      * 
      * @param type the Type object to serialize
+     * @param clock true if the variable is being used in timeout events
      * @param name the name of the variable declaration
      * @return nothing, an exception is thrown
      * @throws IllegalArgumentException always
      */
-	def dispatch String serialize(Type type, String name) {
+	def dispatch String serialize(Type type, boolean clock, String name) {
 		throw new IllegalArgumentException("Not supported type: " + type);
 	}
 	
@@ -52,21 +53,23 @@ class VariableDeclarationSerializer {
      * Serializes the TypeReference object by calling the serialize method on the referenced type.
      * 
      * @param type the TypeReference object to serialize
+     * @param clock true if the variable is being used in timeout events
      * @param name the name of the variable declaration
      * @return the serialized type reference as a string
      */
-	def dispatch String serialize(TypeReference type, String name) {
-		return '''«type.reference.type.serialize(type.reference.name)»''';
+	def dispatch String serialize(TypeReference type, boolean clock, String name) {
+		return '''«type.reference.type.serialize(clock, type.reference.name)»''';
 	}
 	
 	/**
      * Serializes the BooleanTypeDefinition object as 'bool'.
      * 
      * @param type the BooleanTypeDefinition object to serialize
+     * @param clock true if the variable is being used in timeout events
      * @param name the name of the variable declaration
      * @return the serialized boolean type as a string
      */
-	def dispatch String serialize(BooleanTypeDefinition type, String name) {
+	def dispatch String serialize(BooleanTypeDefinition type, boolean clock, String name) {
 		return '''bool''';
 	}
 	
@@ -74,21 +77,23 @@ class VariableDeclarationSerializer {
      * Serializes the IntegerTypeDefinition object as 'int'.
      * 
      * @param type the IntegerTypeDefinition object to serialize
+     * @param clock true if the variable is being used in timeout events
      * @param name the name of the variable declaration
      * @return the serialized integer type as a string
      */
-	def dispatch String serialize(IntegerTypeDefinition type, String name) {
-		return '''int''';
+	def dispatch String serialize(IntegerTypeDefinition type, boolean clock, String name) {
+		return clock ? '''unsigned int''' : '''int''';
 	}
 	
 	/**
      * Serializes the DecimalTypeDefinition object as 'float'.
      * 
      * @param type the DecimalTypeDefinition object to serialize
+     * @param clock true if the variable is being used in timeout events
      * @param name the name of the variable declaration
      * @return the serialized decimal type as a string
      */
-	def dispatch String serialize(DecimalTypeDefinition type, String name) {
+	def dispatch String serialize(DecimalTypeDefinition type, boolean clock, String name) {
 		return '''float''';
 	}
 	
@@ -96,10 +101,11 @@ class VariableDeclarationSerializer {
      * Serializes the RationalTypeDefinition object as 'float'.
      * 
      * @param type the RationalTypeDefinition object to serialize
+     * @param clock true if the variable is being used in timeout events
      * @param name the name of the variable declaration
      * @return the serialized rational type as a string
      */
-	def dispatch String serialize(RationalTypeDefinition type, String name) {
+	def dispatch String serialize(RationalTypeDefinition type, boolean clock, String name) {
 		return '''float''';
 	}
 	
@@ -107,10 +113,11 @@ class VariableDeclarationSerializer {
      * Serializes the EnumerationTypeDefinition object as an enum with the transformed name.
      * 
      * @param type the EnumerationTypeDefinition object to serialize
+     * @param clock true if the variable is being used in timeout events
      * @param name the name of the variable declaration
      * @return the serialized enum name as a string
      */
-	def dispatch String serialize(EnumerationTypeDefinition type, String name) {
+	def dispatch String serialize(EnumerationTypeDefinition type, boolean clock, String name) {
 		return '''enum «transformString(name)»''';
 	}
 	

@@ -1,10 +1,12 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c;
 
 import com.google.common.collect.Iterables;
+import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation;
 import hu.bme.mit.gamma.expression.model.Type;
 import hu.bme.mit.gamma.expression.model.TypeDeclaration;
 import hu.bme.mit.gamma.expression.model.TypeReference;
 import hu.bme.mit.gamma.expression.model.VariableDeclaration;
+import hu.bme.mit.gamma.expression.model.VariableDeclarationAnnotation;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.TestModel;
@@ -26,6 +28,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
@@ -117,7 +121,13 @@ public class CodeBuilder implements IStatechartCode {
       EList<VariableDeclaration> _variableDeclarations = this.xsts.getVariableDeclarations();
       for(final VariableDeclaration variableDeclaration : _variableDeclarations) {
         _builder_1.append("\t");
-        String _serialize_1 = this.variableDeclarationSerializer.serialize(variableDeclaration.getType(), variableDeclaration.getName());
+        final Function1<VariableDeclarationAnnotation, Boolean> _function = (VariableDeclarationAnnotation type) -> {
+          return Boolean.valueOf((type instanceof ClockVariableDeclarationAnnotation));
+        };
+        String _serialize_1 = this.variableDeclarationSerializer.serialize(
+          variableDeclaration.getType(), 
+          IterableExtensions.<VariableDeclarationAnnotation>exists(variableDeclaration.getAnnotations(), _function), 
+          variableDeclaration.getName());
         _builder_1.append(_serialize_1, "\t");
         _builder_1.append(" ");
         String _name = variableDeclaration.getName();

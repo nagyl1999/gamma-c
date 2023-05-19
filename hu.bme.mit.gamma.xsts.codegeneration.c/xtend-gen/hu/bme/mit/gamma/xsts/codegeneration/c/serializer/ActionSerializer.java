@@ -193,7 +193,7 @@ public class ActionSerializer {
    */
   protected CharSequence _serialize(final VariableDeclarationAction action) {
     StringConcatenation _builder = new StringConcatenation();
-    String _serialize = this.variableDeclarationSerializer.serialize(action.getVariableDeclaration().getType(), action.getVariableDeclaration().getName());
+    String _serialize = this.variableDeclarationSerializer.serialize(action.getVariableDeclaration().getType(), false, action.getVariableDeclaration().getName());
     _builder.append(_serialize);
     _builder.append(" ");
     String _name = action.getVariableDeclaration().getName();

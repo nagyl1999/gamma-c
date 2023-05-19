@@ -52,11 +52,12 @@ public class VariableDeclarationSerializer {
    * Throws an IllegalArgumentException since the Type class is not supported.
    * 
    * @param type the Type object to serialize
+   * @param clock true if the variable is being used in timeout events
    * @param name the name of the variable declaration
    * @return nothing, an exception is thrown
    * @throws IllegalArgumentException always
    */
-  protected String _serialize(final Type type, final String name) {
+  protected String _serialize(final Type type, final boolean clock, final String name) {
     throw new IllegalArgumentException(("Not supported type: " + type));
   }
 
@@ -64,12 +65,13 @@ public class VariableDeclarationSerializer {
    * Serializes the TypeReference object by calling the serialize method on the referenced type.
    * 
    * @param type the TypeReference object to serialize
+   * @param clock true if the variable is being used in timeout events
    * @param name the name of the variable declaration
    * @return the serialized type reference as a string
    */
-  protected String _serialize(final TypeReference type, final String name) {
+  protected String _serialize(final TypeReference type, final boolean clock, final String name) {
     StringConcatenation _builder = new StringConcatenation();
-    String _serialize = this.serialize(type.getReference().getType(), type.getReference().getName());
+    String _serialize = this.serialize(type.getReference().getType(), clock, type.getReference().getName());
     _builder.append(_serialize);
     return _builder.toString();
   }
@@ -78,10 +80,11 @@ public class VariableDeclarationSerializer {
    * Serializes the BooleanTypeDefinition object as 'bool'.
    * 
    * @param type the BooleanTypeDefinition object to serialize
+   * @param clock true if the variable is being used in timeout events
    * @param name the name of the variable declaration
    * @return the serialized boolean type as a string
    */
-  protected String _serialize(final BooleanTypeDefinition type, final String name) {
+  protected String _serialize(final BooleanTypeDefinition type, final boolean clock, final String name) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("bool");
     return _builder.toString();
@@ -91,23 +94,33 @@ public class VariableDeclarationSerializer {
    * Serializes the IntegerTypeDefinition object as 'int'.
    * 
    * @param type the IntegerTypeDefinition object to serialize
+   * @param clock true if the variable is being used in timeout events
    * @param name the name of the variable declaration
    * @return the serialized integer type as a string
    */
-  protected String _serialize(final IntegerTypeDefinition type, final String name) {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("int");
-    return _builder.toString();
+  protected String _serialize(final IntegerTypeDefinition type, final boolean clock, final String name) {
+    String _xifexpression = null;
+    if (clock) {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("unsigned int");
+      _xifexpression = _builder.toString();
+    } else {
+      StringConcatenation _builder_1 = new StringConcatenation();
+      _builder_1.append("int");
+      _xifexpression = _builder_1.toString();
+    }
+    return _xifexpression;
   }
 
   /**
    * Serializes the DecimalTypeDefinition object as 'float'.
    * 
    * @param type the DecimalTypeDefinition object to serialize
+   * @param clock true if the variable is being used in timeout events
    * @param name the name of the variable declaration
    * @return the serialized decimal type as a string
    */
-  protected String _serialize(final DecimalTypeDefinition type, final String name) {
+  protected String _serialize(final DecimalTypeDefinition type, final boolean clock, final String name) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("float");
     return _builder.toString();
@@ -117,10 +130,11 @@ public class VariableDeclarationSerializer {
    * Serializes the RationalTypeDefinition object as 'float'.
    * 
    * @param type the RationalTypeDefinition object to serialize
+   * @param clock true if the variable is being used in timeout events
    * @param name the name of the variable declaration
    * @return the serialized rational type as a string
    */
-  protected String _serialize(final RationalTypeDefinition type, final String name) {
+  protected String _serialize(final RationalTypeDefinition type, final boolean clock, final String name) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("float");
     return _builder.toString();
@@ -130,10 +144,11 @@ public class VariableDeclarationSerializer {
    * Serializes the EnumerationTypeDefinition object as an enum with the transformed name.
    * 
    * @param type the EnumerationTypeDefinition object to serialize
+   * @param clock true if the variable is being used in timeout events
    * @param name the name of the variable declaration
    * @return the serialized enum name as a string
    */
-  protected String _serialize(final EnumerationTypeDefinition type, final String name) {
+  protected String _serialize(final EnumerationTypeDefinition type, final boolean clock, final String name) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("enum ");
     String _transformString = this.transformString(name);
@@ -141,24 +156,24 @@ public class VariableDeclarationSerializer {
     return _builder.toString();
   }
 
-  public String serialize(final Type type, final String name) {
+  public String serialize(final Type type, final boolean clock, final String name) {
     if (type instanceof EnumerationTypeDefinition) {
-      return _serialize((EnumerationTypeDefinition)type, name);
+      return _serialize((EnumerationTypeDefinition)type, clock, name);
     } else if (type instanceof DecimalTypeDefinition) {
-      return _serialize((DecimalTypeDefinition)type, name);
+      return _serialize((DecimalTypeDefinition)type, clock, name);
     } else if (type instanceof IntegerTypeDefinition) {
-      return _serialize((IntegerTypeDefinition)type, name);
+      return _serialize((IntegerTypeDefinition)type, clock, name);
     } else if (type instanceof RationalTypeDefinition) {
-      return _serialize((RationalTypeDefinition)type, name);
+      return _serialize((RationalTypeDefinition)type, clock, name);
     } else if (type instanceof BooleanTypeDefinition) {
-      return _serialize((BooleanTypeDefinition)type, name);
+      return _serialize((BooleanTypeDefinition)type, clock, name);
     } else if (type instanceof TypeReference) {
-      return _serialize((TypeReference)type, name);
+      return _serialize((TypeReference)type, clock, name);
     } else if (type != null) {
-      return _serialize(type, name);
+      return _serialize(type, clock, name);
     } else {
       throw new IllegalArgumentException("Unhandled parameter types: " +
-        Arrays.<Object>asList(type, name).toString());
+        Arrays.<Object>asList(type, clock, name).toString());
     }
   }
 }

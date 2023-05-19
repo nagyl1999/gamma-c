@@ -109,7 +109,7 @@ class ActionSerializer {
 	 * @return a CharSequence that represents the serialized VariableDeclarationAction
 	 */
 	def dispatch CharSequence serialize(VariableDeclarationAction action) {
-		return '''«variableDeclarationSerializer.serialize(action.variableDeclaration.type, action.variableDeclaration.name)» «action.variableDeclaration.name»;''';
+		return '''«variableDeclarationSerializer.serialize(action.variableDeclaration.type, false, action.variableDeclaration.name)» «action.variableDeclaration.name»;''';
 	}
 	
 	/**

@@ -13,6 +13,8 @@ import hu.bme.mit.gamma.expression.model.VariableDeclaration
 import java.util.HashSet
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
+import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation
+import hu.bme.mit.gamma.expression.model.impl.ClockVariableDeclarationAnnotationImpl
 
 class WrapperBuilder implements IStatechartCode {
 	
@@ -82,7 +84,11 @@ class WrapperBuilder implements IStatechartCode {
 		header.addContent('''
 			«FOR variable : inputs»
 				/* Setter for «variable.name.toFirstUpper» */
-				void set«variable.name.toFirstUpper»(«name»* statechart, «variableDeclarationSerializer.serialize(variable.type, variable.name)» value);
+				void set«variable.name.toFirstUpper»(«name»* statechart, «variableDeclarationSerializer.serialize(
+					variable.type, 
+					variable.annotations.exists[type | type instanceof ClockVariableDeclarationAnnotation], 
+					variable.name
+				)» value);
 			«ENDFOR»
 		''');
 		
@@ -90,7 +96,11 @@ class WrapperBuilder implements IStatechartCode {
 		header.addContent('''
 		«FOR variable : outputs»
 			/* Getter for «variable.name.toFirstUpper» */
-			«variableDeclarationSerializer.serialize(variable.type, variable.name)» get«variable.name.toFirstUpper»(«name»* statechart);
+			«variableDeclarationSerializer.serialize(
+				variable.type, 
+				variable.annotations.exists[type | type instanceof ClockVariableDeclarationAnnotation], 
+				variable.name
+			)» get«variable.name.toFirstUpper»(«name»* statechart);
 		«ENDFOR»
 		''');
 		
@@ -131,7 +141,11 @@ class WrapperBuilder implements IStatechartCode {
 		code.addContent('''
 			«FOR variable : inputs SEPARATOR '\n'»
 				/* Setter for «variable.name.toFirstUpper» */
-				void set«variable.name.toFirstUpper»(«name»* statechart, «variableDeclarationSerializer.serialize(variable.type, variable.name)» value) {
+				void set«variable.name.toFirstUpper»(«name»* statechart, «variableDeclarationSerializer.serialize(
+					variable.type, 
+					variable.annotations.exists[type | type instanceof ClockVariableDeclarationAnnotation], 
+					variable.name
+				)» value) {
 					statechart->«stName.toLowerCase».«variable.name» = value;
 				}
 			«ENDFOR»
@@ -141,7 +155,11 @@ class WrapperBuilder implements IStatechartCode {
 		code.addContent('''
 		«FOR variable : outputs SEPARATOR '\n'»
 			/* Getter for «variable.name.toFirstUpper» */
-			«variableDeclarationSerializer.serialize(variable.type, variable.name)» get«variable.name.toFirstUpper»(«name»* statechart) {
+			«variableDeclarationSerializer.serialize(
+				variable.type, 
+				variable.annotations.exists[type | type instanceof ClockVariableDeclarationAnnotation], 
+				variable.name
+			)» get«variable.name.toFirstUpper»(«name»* statechart) {
 				return statechart->«stName.toLowerCase».«variable.name»;
 			}
 		«ENDFOR»

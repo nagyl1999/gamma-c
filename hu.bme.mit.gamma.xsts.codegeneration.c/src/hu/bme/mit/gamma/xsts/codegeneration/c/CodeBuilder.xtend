@@ -12,8 +12,9 @@ import java.nio.file.Paths
 import org.eclipse.emf.common.util.URI
 import hu.bme.mit.gamma.expression.model.TypeReference
 import hu.bme.mit.gamma.expression.model.VariableDeclaration
-import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
+import hu.bme.mit.gamma.expression.model.impl.ClockVariableDeclarationAnnotationImpl
+import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation
 
 class CodeBuilder implements IStatechartCode {
 	
@@ -73,7 +74,11 @@ class CodeBuilder implements IStatechartCode {
 			/* Structure representing «name» component */
 			typedef struct {
 				«FOR variableDeclaration : xsts.variableDeclarations»
-					«variableDeclarationSerializer.serialize(variableDeclaration.type, variableDeclaration.name)» «variableDeclaration.name»;
+					«variableDeclarationSerializer.serialize(
+						variableDeclaration.type,
+						 variableDeclaration.annotations.exists[type | type instanceof ClockVariableDeclarationAnnotation],
+						  variableDeclaration.name
+					)» «variableDeclaration.name»;
 				«ENDFOR»
 			} «stName»;
 		''');

@@ -1,7 +1,9 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c;
 
 import com.google.common.collect.Iterables;
+import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation;
 import hu.bme.mit.gamma.expression.model.VariableDeclaration;
+import hu.bme.mit.gamma.expression.model.VariableDeclarationAnnotation;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms;
@@ -16,6 +18,8 @@ import java.util.HashSet;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
@@ -144,7 +148,13 @@ public class WrapperBuilder implements IStatechartCode {
         _builder_4.append("(");
         _builder_4.append(this.name);
         _builder_4.append("* statechart, ");
-        String _serialize = this.variableDeclarationSerializer.serialize(variable.getType(), variable.getName());
+        final Function1<VariableDeclarationAnnotation, Boolean> _function = (VariableDeclarationAnnotation type) -> {
+          return Boolean.valueOf((type instanceof ClockVariableDeclarationAnnotation));
+        };
+        String _serialize = this.variableDeclarationSerializer.serialize(
+          variable.getType(), 
+          IterableExtensions.<VariableDeclarationAnnotation>exists(variable.getAnnotations(), _function), 
+          variable.getName());
         _builder_4.append(_serialize);
         _builder_4.append(" value);");
         _builder_4.newLineIfNotEmpty();
@@ -159,7 +169,13 @@ public class WrapperBuilder implements IStatechartCode {
         _builder_5.append(_firstUpper_2);
         _builder_5.append(" */");
         _builder_5.newLineIfNotEmpty();
-        String _serialize_1 = this.variableDeclarationSerializer.serialize(variable_1.getType(), variable_1.getName());
+        final Function1<VariableDeclarationAnnotation, Boolean> _function_1 = (VariableDeclarationAnnotation type) -> {
+          return Boolean.valueOf((type instanceof ClockVariableDeclarationAnnotation));
+        };
+        String _serialize_1 = this.variableDeclarationSerializer.serialize(
+          variable_1.getType(), 
+          IterableExtensions.<VariableDeclarationAnnotation>exists(variable_1.getAnnotations(), _function_1), 
+          variable_1.getName());
         _builder_5.append(_serialize_1);
         _builder_5.append(" get");
         String _firstUpper_3 = StringExtensions.toFirstUpper(variable_1.getName());
@@ -305,7 +321,13 @@ public class WrapperBuilder implements IStatechartCode {
         _builder_1.append("(");
         _builder_1.append(this.name);
         _builder_1.append("* statechart, ");
-        String _serialize = this.variableDeclarationSerializer.serialize(variable_1.getType(), variable_1.getName());
+        final Function1<VariableDeclarationAnnotation, Boolean> _function = (VariableDeclarationAnnotation type) -> {
+          return Boolean.valueOf((type instanceof ClockVariableDeclarationAnnotation));
+        };
+        String _serialize = this.variableDeclarationSerializer.serialize(
+          variable_1.getType(), 
+          IterableExtensions.<VariableDeclarationAnnotation>exists(variable_1.getAnnotations(), _function), 
+          variable_1.getName());
         _builder_1.append(_serialize);
         _builder_1.append(" value) {");
         _builder_1.newLineIfNotEmpty();
@@ -337,7 +359,13 @@ public class WrapperBuilder implements IStatechartCode {
         _builder_2.append(_firstUpper_2);
         _builder_2.append(" */");
         _builder_2.newLineIfNotEmpty();
-        String _serialize_1 = this.variableDeclarationSerializer.serialize(variable_2.getType(), variable_2.getName());
+        final Function1<VariableDeclarationAnnotation, Boolean> _function_1 = (VariableDeclarationAnnotation type) -> {
+          return Boolean.valueOf((type instanceof ClockVariableDeclarationAnnotation));
+        };
+        String _serialize_1 = this.variableDeclarationSerializer.serialize(
+          variable_2.getType(), 
+          IterableExtensions.<VariableDeclarationAnnotation>exists(variable_2.getAnnotations(), _function_1), 
+          variable_2.getName());
         _builder_2.append(_serialize_1);
         _builder_2.append(" get");
         String _firstUpper_3 = StringExtensions.toFirstUpper(variable_2.getName());
