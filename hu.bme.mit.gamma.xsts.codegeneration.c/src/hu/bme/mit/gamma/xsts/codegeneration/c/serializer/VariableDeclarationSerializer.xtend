@@ -56,7 +56,7 @@ class VariableDeclarationSerializer {
      * @return the serialized type reference as a string
      */
 	def dispatch String serialize(TypeReference type, String name) {
-		return '''«type.reference.type.serialize(name)»''';
+		return '''«type.reference.type.serialize(type.reference.name)»''';
 	}
 	
 	/**

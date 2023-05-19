@@ -69,7 +69,7 @@ public class VariableDeclarationSerializer {
    */
   protected String _serialize(final TypeReference type, final String name) {
     StringConcatenation _builder = new StringConcatenation();
-    String _serialize = this.serialize(type.getReference().getType(), name);
+    String _serialize = this.serialize(type.getReference().getType(), type.getReference().getName());
     _builder.append(_serialize);
     return _builder.toString();
   }

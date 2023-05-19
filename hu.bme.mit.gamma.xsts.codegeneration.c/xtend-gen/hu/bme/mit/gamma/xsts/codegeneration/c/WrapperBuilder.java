@@ -238,13 +238,7 @@ public class WrapperBuilder implements IStatechartCode {
     _builder.newLineIfNotEmpty();
     {
       Iterable<VariableDeclaration> _retrieveTimeouts = this.variableDiagnoser.retrieveTimeouts(this.xsts);
-      boolean _hasElements = false;
       for(final VariableDeclaration variable : _retrieveTimeouts) {
-        if (!_hasElements) {
-          _hasElements = true;
-        } else {
-          _builder.appendImmediate("\n", "\t");
-        }
         _builder.append("\t");
         _builder.append("/* Add elapsed time to timeout variable ");
         String _name = variable.getName();
@@ -293,10 +287,10 @@ public class WrapperBuilder implements IStatechartCode {
     this.code.addContent(_builder.toString());
     StringConcatenation _builder_1 = new StringConcatenation();
     {
-      boolean _hasElements_1 = false;
+      boolean _hasElements = false;
       for(final VariableDeclaration variable_1 : this.inputs) {
-        if (!_hasElements_1) {
-          _hasElements_1 = true;
+        if (!_hasElements) {
+          _hasElements = true;
         } else {
           _builder_1.appendImmediate("\n", "");
         }
@@ -331,10 +325,10 @@ public class WrapperBuilder implements IStatechartCode {
     this.code.addContent(_builder_1.toString());
     StringConcatenation _builder_2 = new StringConcatenation();
     {
-      boolean _hasElements_2 = false;
+      boolean _hasElements_1 = false;
       for(final VariableDeclaration variable_2 : this.outputs) {
-        if (!_hasElements_2) {
-          _hasElements_2 = true;
+        if (!_hasElements_1) {
+          _hasElements_1 = true;
         } else {
           _builder_2.appendImmediate("\n", "");
         }

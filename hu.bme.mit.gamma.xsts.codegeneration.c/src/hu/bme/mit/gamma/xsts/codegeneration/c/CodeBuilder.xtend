@@ -25,7 +25,6 @@ class CodeBuilder implements IStatechartCode {
 	private TestModel test;
 	private HeaderModel header;
 	
-	private Platforms platforms = new Platforms;
 	private SupportedPlatforms platform = SupportedPlatforms.UNIX;
 	
 	private final ActionSerializer actionSerializer = new ActionSerializer;

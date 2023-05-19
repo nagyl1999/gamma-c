@@ -114,7 +114,7 @@ class WrapperBuilder implements IStatechartCode {
 			/* Calculate Timeout events */
 			void time«name»(«name»* statechart) {
 				«Platforms.get(platform).getTimer()»
-				«FOR variable : variableDiagnoser.retrieveTimeouts(xsts) SEPARATOR '\n'»
+				«FOR variable : variableDiagnoser.retrieveTimeouts(xsts)»
 					/* Add elapsed time to timeout variable «variable.name» */
 					statechart->«stName.toLowerCase».«variable.name» += milliseconds;
 				«ENDFOR»
