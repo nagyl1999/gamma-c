@@ -41,7 +41,7 @@ class UnixPlatform implements IPlatform {
 		return '''
 			gettimeofday(&statechart->tval_after, NULL);
 			timersub(&statechart->tval_after, &statechart->tval_before, &statechart->tval_result);
-			int milliseconds = (int)statechart->tval_result.tv_sec * 1000 + (int)statechart->tval_result.tv_usec / 1000;
+			unsigned int milliseconds = (unsigned int)statechart->tval_result.tv_sec * 1000 + (unsigned int)statechart->tval_result.tv_usec / 1000;
 			gettimeofday(&statechart->tval_before, NULL);
 		''';
 	}

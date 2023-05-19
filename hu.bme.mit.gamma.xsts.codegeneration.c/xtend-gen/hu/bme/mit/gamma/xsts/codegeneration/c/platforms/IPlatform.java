@@ -28,7 +28,7 @@ public interface IPlatform {
 
   /**
    * Returns the timer specific to the platform. All platforms
-   * should use 'milliseconds' indicating the elapsed time.
+   * should use 'unsigned int milliseconds' indicating the elapsed time.
    * 
    * @return the timer as a string
    */
