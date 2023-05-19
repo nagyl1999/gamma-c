@@ -13,7 +13,7 @@ import org.eclipse.emf.common.util.URI
 import hu.bme.mit.gamma.expression.model.TypeReference
 import hu.bme.mit.gamma.expression.model.VariableDeclaration
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
-import hu.bme.mit.gamma.expression.model.impl.ClockVariableDeclarationAnnotationImpl
+import hu.bme.mit.gamma.lowlevel.xsts.transformation.VariableGroupRetriever
 import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation
 
 class CodeBuilder implements IStatechartCode {
@@ -29,8 +29,8 @@ class CodeBuilder implements IStatechartCode {
 	private SupportedPlatforms platform = SupportedPlatforms.UNIX;
 	
 	private final ActionSerializer actionSerializer = new ActionSerializer;
-	private final VariableDiagnoser variableDiagnoser = new VariableDiagnoser;
 	private final ExpressionSerializer expressionSerializer = new ExpressionSerializer;
+	private final VariableGroupRetriever variableGroupRetriever = VariableGroupRetriever.INSTANCE;
 	private final TypeDeclarationSerializer typeDeclarationSerializer = new TypeDeclarationSerializer;
 	private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
 	
@@ -51,10 +51,10 @@ class CodeBuilder implements IStatechartCode {
     		componentVariables.add(variableDeclaration.name)
 		];
 		/* in & out events and parameters in a unique set */
-		inputs.addAll(variableDiagnoser.retrieveInEvents(xsts));
-		inputs.addAll(variableDiagnoser.retrieveInEventParameters(xsts));
-		outputs.addAll(variableDiagnoser.retrieveOutEvents(xsts) );
-		outputs.addAll(variableDiagnoser.retrieveOutEventParameters(xsts));
+		inputs.addAll(variableGroupRetriever.getSystemInEventVariableGroup(xsts).variables);
+		inputs.addAll(variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).variables);
+		outputs.addAll(variableGroupRetriever.getSystemOutEventVariableGroup(xsts).variables);
+		outputs.addAll(variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).variables);
 		/* optional */
 		this.constructTest();
 	}

@@ -2,3 +2,10 @@
 /.UnixPlatform.java._trace
 /.SupportedPlatforms.java._trace
 /.Platforms.java._trace
+/.IPlatform.xtendbin
+/.SupportedPlatforms.xtendbin
+/.UnixPlatform.xtendbin
+/IPlatform.java
+/Platforms.java
+/SupportedPlatforms.java
+/UnixPlatform.java

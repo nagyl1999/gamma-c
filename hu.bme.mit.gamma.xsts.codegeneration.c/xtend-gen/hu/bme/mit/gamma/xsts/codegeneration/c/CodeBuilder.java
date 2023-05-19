@@ -1,12 +1,12 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c;
 
-import com.google.common.collect.Iterables;
 import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation;
 import hu.bme.mit.gamma.expression.model.Type;
 import hu.bme.mit.gamma.expression.model.TypeDeclaration;
 import hu.bme.mit.gamma.expression.model.TypeReference;
 import hu.bme.mit.gamma.expression.model.VariableDeclaration;
 import hu.bme.mit.gamma.expression.model.VariableDeclarationAnnotation;
+import hu.bme.mit.gamma.lowlevel.xsts.transformation.VariableGroupRetriever;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.TestModel;
@@ -15,7 +15,6 @@ import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ActionSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ExpressionSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.TypeDeclarationSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer;
-import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDiagnoser;
 import hu.bme.mit.gamma.xsts.model.XSTS;
 import hu.bme.mit.gamma.xsts.model.XTransition;
 import java.io.File;
@@ -50,9 +49,9 @@ public class CodeBuilder implements IStatechartCode {
 
   private final ActionSerializer actionSerializer = new ActionSerializer();
 
-  private final VariableDiagnoser variableDiagnoser = new VariableDiagnoser();
-
   private final ExpressionSerializer expressionSerializer = new ExpressionSerializer();
+
+  private final VariableGroupRetriever variableGroupRetriever = VariableGroupRetriever.INSTANCE;
 
   private final TypeDeclarationSerializer typeDeclarationSerializer = new TypeDeclarationSerializer();
 
@@ -78,10 +77,10 @@ public class CodeBuilder implements IStatechartCode {
       CodeBuilder.componentVariables.add(variableDeclaration.getName());
     };
     xsts.getVariableDeclarations().forEach(_function);
-    Iterables.<VariableDeclaration>addAll(this.inputs, this.variableDiagnoser.retrieveInEvents(xsts));
-    Iterables.<VariableDeclaration>addAll(this.inputs, this.variableDiagnoser.retrieveInEventParameters(xsts));
-    Iterables.<VariableDeclaration>addAll(this.outputs, this.variableDiagnoser.retrieveOutEvents(xsts));
-    Iterables.<VariableDeclaration>addAll(this.outputs, this.variableDiagnoser.retrieveOutEventParameters(xsts));
+    this.inputs.addAll(this.variableGroupRetriever.getSystemInEventVariableGroup(xsts).getVariables());
+    this.inputs.addAll(this.variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).getVariables());
+    this.outputs.addAll(this.variableGroupRetriever.getSystemOutEventVariableGroup(xsts).getVariables());
+    this.outputs.addAll(this.variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).getVariables());
     this.constructTest();
   }
 

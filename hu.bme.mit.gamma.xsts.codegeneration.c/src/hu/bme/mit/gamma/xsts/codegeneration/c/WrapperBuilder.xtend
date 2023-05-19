@@ -7,14 +7,13 @@ import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDiagnoser
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer
 import hu.bme.mit.gamma.expression.model.VariableDeclaration
 import java.util.HashSet
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
 import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation
-import hu.bme.mit.gamma.expression.model.impl.ClockVariableDeclarationAnnotationImpl
+import hu.bme.mit.gamma.lowlevel.xsts.transformation.VariableGroupRetriever
 
 class WrapperBuilder implements IStatechartCode {
 	
@@ -29,7 +28,7 @@ class WrapperBuilder implements IStatechartCode {
 	
 	private SupportedPlatforms platform = SupportedPlatforms.UNIX;
 	
-	private final VariableDiagnoser variableDiagnoser = new VariableDiagnoser;
+	private final VariableGroupRetriever variableGroupRetriever = VariableGroupRetriever.INSTANCE;
 	private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
 	
 	public new(XSTS xsts) {
@@ -40,10 +39,10 @@ class WrapperBuilder implements IStatechartCode {
 		this.code = new CodeModel(name);
 		this.header = new HeaderModel(name);
 		/* in & out events and parameters in a unique set */
-		inputs.addAll(variableDiagnoser.retrieveInEvents(xsts));
-		inputs.addAll(variableDiagnoser.retrieveInEventParameters(xsts));
-		outputs.addAll(variableDiagnoser.retrieveOutEvents(xsts) );
-		outputs.addAll(variableDiagnoser.retrieveOutEventParameters(xsts));
+		inputs.addAll(variableGroupRetriever.getSystemInEventVariableGroup(xsts).variables);
+		inputs.addAll(variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).variables);
+		outputs.addAll(variableGroupRetriever.getSystemOutEventVariableGroup(xsts).variables);
+		outputs.addAll(variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).variables);
 	}
 	
 	public override setPlatform(SupportedPlatforms platform) {
@@ -124,7 +123,7 @@ class WrapperBuilder implements IStatechartCode {
 			/* Calculate Timeout events */
 			void time«name»(«name»* statechart) {
 				«Platforms.get(platform).getTimer()»
-				«FOR variable : variableDiagnoser.retrieveTimeouts(xsts)»
+				«FOR variable : variableGroupRetriever.getTimeoutGroup(xsts).variables»
 					/* Add elapsed time to timeout variable «variable.name» */
 					statechart->«stName.toLowerCase».«variable.name» += milliseconds;
 				«ENDFOR»

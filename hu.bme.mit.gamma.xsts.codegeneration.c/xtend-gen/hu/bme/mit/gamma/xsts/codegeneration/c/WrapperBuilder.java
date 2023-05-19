@@ -1,20 +1,20 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c;
 
-import com.google.common.collect.Iterables;
 import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation;
 import hu.bme.mit.gamma.expression.model.VariableDeclaration;
 import hu.bme.mit.gamma.expression.model.VariableDeclarationAnnotation;
+import hu.bme.mit.gamma.lowlevel.xsts.transformation.VariableGroupRetriever;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms;
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer;
-import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDiagnoser;
 import hu.bme.mit.gamma.xsts.model.XSTS;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Exceptions;
@@ -40,7 +40,7 @@ public class WrapperBuilder implements IStatechartCode {
 
   private SupportedPlatforms platform = SupportedPlatforms.UNIX;
 
-  private final VariableDiagnoser variableDiagnoser = new VariableDiagnoser();
+  private final VariableGroupRetriever variableGroupRetriever = VariableGroupRetriever.INSTANCE;
 
   private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer();
 
@@ -56,10 +56,10 @@ public class WrapperBuilder implements IStatechartCode {
     this.code = _codeModel;
     HeaderModel _headerModel = new HeaderModel(this.name);
     this.header = _headerModel;
-    Iterables.<VariableDeclaration>addAll(this.inputs, this.variableDiagnoser.retrieveInEvents(xsts));
-    Iterables.<VariableDeclaration>addAll(this.inputs, this.variableDiagnoser.retrieveInEventParameters(xsts));
-    Iterables.<VariableDeclaration>addAll(this.outputs, this.variableDiagnoser.retrieveOutEvents(xsts));
-    Iterables.<VariableDeclaration>addAll(this.outputs, this.variableDiagnoser.retrieveOutEventParameters(xsts));
+    this.inputs.addAll(this.variableGroupRetriever.getSystemInEventVariableGroup(xsts).getVariables());
+    this.inputs.addAll(this.variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).getVariables());
+    this.outputs.addAll(this.variableGroupRetriever.getSystemOutEventVariableGroup(xsts).getVariables());
+    this.outputs.addAll(this.variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).getVariables());
   }
 
   @Override
@@ -253,8 +253,8 @@ public class WrapperBuilder implements IStatechartCode {
     _builder.append(_timer, "\t");
     _builder.newLineIfNotEmpty();
     {
-      Iterable<VariableDeclaration> _retrieveTimeouts = this.variableDiagnoser.retrieveTimeouts(this.xsts);
-      for(final VariableDeclaration variable : _retrieveTimeouts) {
+      EList<VariableDeclaration> _variables = this.variableGroupRetriever.getTimeoutGroup(this.xsts).getVariables();
+      for(final VariableDeclaration variable : _variables) {
         _builder.append("\t");
         _builder.append("/* Add elapsed time to timeout variable ");
         String _name = variable.getName();
