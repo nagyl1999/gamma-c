@@ -28,20 +28,44 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.StringExtensions;
 
+/**
+ * The {@code CodeBuilder} class implements the {@code IStatechartCode} interface and is responsible for generating C code from an XSTS model.
+ */
 @SuppressWarnings("all")
 public class CodeBuilder implements IStatechartCode {
+  /**
+   * The XSTS (Extended Symbolic Transition Systems) used for code generation.
+   */
   private XSTS xsts;
 
+  /**
+   * The name of the component.
+   */
   private String name;
 
+  /**
+   * The name of the statechart.
+   */
   private String stName;
 
+  /**
+   * The code model for generating code.
+   */
   private CodeModel code;
 
+  /**
+   * The header model for generating code.
+   */
   private HeaderModel header;
 
+  /**
+   * The supported platform for code generation.
+   */
   private SupportedPlatforms platform = SupportedPlatforms.UNIX;
 
+  /**
+   * Serializers used for code generation
+   */
   private final ActionSerializer actionSerializer = new ActionSerializer();
 
   private final ExpressionSerializer expressionSerializer = new ExpressionSerializer();
@@ -52,12 +76,26 @@ public class CodeBuilder implements IStatechartCode {
 
   private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer();
 
+  /**
+   * The set of input variable declarations.
+   */
   private HashSet<VariableDeclaration> inputs = new HashSet<VariableDeclaration>();
 
+  /**
+   * The set of output variable declarations.
+   */
   private HashSet<VariableDeclaration> outputs = new HashSet<VariableDeclaration>();
 
+  /**
+   * The list of components within the system. It is used to determine wether 'statechart->' is neccesarry.
+   */
   public static ArrayList<String> componentVariables = new ArrayList<String>();
 
+  /**
+   * Constructs a {@code CodeBuilder} object with the given {@code XSTS}.
+   * 
+   * @param xsts the XSTS (Extended Symbolic Transition Systems) used for code generation
+   */
   public CodeBuilder(final XSTS xsts) {
     this.xsts = xsts;
     this.name = StringExtensions.toFirstUpper(xsts.getName());
@@ -76,11 +114,19 @@ public class CodeBuilder implements IStatechartCode {
     this.outputs.addAll(this.variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).getVariables());
   }
 
+  /**
+   * Sets the platform for code generation.
+   * 
+   * @param platform the platform
+   */
   @Override
   public void setPlatform(final SupportedPlatforms platform) {
     this.platform = platform;
   }
 
+  /**
+   * Constructs the statechart's header code.
+   */
   @Override
   public void constructHeader() {
     StringConcatenation _builder = new StringConcatenation();
@@ -213,6 +259,9 @@ public class CodeBuilder implements IStatechartCode {
     this.header.addContent(_builder_3.toString());
   }
 
+  /**
+   * Constructs the statechart's C code.
+   */
   @Override
   public void constructCode() {
     StringConcatenation _builder = new StringConcatenation();
@@ -395,6 +444,11 @@ public class CodeBuilder implements IStatechartCode {
     this.code.addContent(_builder_6.toString());
   }
 
+  /**
+   * Saves the generated code and header models to the specified URI.
+   * 
+   * @param uri the URI to save the models to
+   */
   @Override
   public void save(final URI uri) {
     try {

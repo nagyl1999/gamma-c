@@ -22,8 +22,6 @@ import org.eclipse.xtend2.lib.StringConcatenation;
 public class HavocSerializer {
   private Random random = new Random();
 
-  private final ExpressionSerializer expressionSerializer = new ExpressionSerializer();
-
   /**
    * Throws an exception for unsupported types.
    * 

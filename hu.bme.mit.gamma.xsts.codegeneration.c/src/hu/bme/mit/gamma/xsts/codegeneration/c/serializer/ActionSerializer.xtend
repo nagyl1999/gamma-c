@@ -1,20 +1,26 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c.serializer
 
-import hu.bme.mit.gamma.xsts.model.*;
-import hu.bme.mit.gamma.expression.model.*;
+import hu.bme.mit.gamma.xsts.model.Action
+import hu.bme.mit.gamma.xsts.model.AssignmentAction
+import hu.bme.mit.gamma.xsts.model.EmptyAction
+import hu.bme.mit.gamma.xsts.model.HavocAction
+import hu.bme.mit.gamma.xsts.model.IfAction
+import hu.bme.mit.gamma.xsts.model.NonDeterministicAction
+import hu.bme.mit.gamma.xsts.model.ParallelAction
+import hu.bme.mit.gamma.xsts.model.SequentialAction
+import hu.bme.mit.gamma.xsts.model.VariableDeclarationAction
+import hu.bme.mit.gamma.xsts.model.XSTS
 
-import static extension hu.bme.mit.gamma.xsts.derivedfeatures.XstsDerivedFeatures.*;
-
+import static extension hu.bme.mit.gamma.xsts.derivedfeatures.XstsDerivedFeatures.*
 
 /**
  * This class provides a serializer for actions in XSTS models.
  */
 class ActionSerializer {
 	
-	private final HavocSerializer havocSerializer = new HavocSerializer;
-	private final ExpressionSerializer expressionSerializer = new ExpressionSerializer;
-	private final TypeDeclarationSerializer typeDeclarationSerializer = new TypeDeclarationSerializer;
-	private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
+	final HavocSerializer havocSerializer = new HavocSerializer;
+	final ExpressionSerializer expressionSerializer = new ExpressionSerializer;
+	final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
 	
 	/**
 	 * Serializes an initializing action.

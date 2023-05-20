@@ -9,21 +9,21 @@ interface IPlatform {
      * 
      * @return the headers as a string
      */
-	public def String getHeaders();
+	def String getHeaders();
 	
 	/**
      * Returns the part of struct specific to the platform.
      * 
      * @return the struct as a string
      */
-	public def String getStruct();
+	def String getStruct();
 	
 	/**
      * Returns the timer initialization specific to the platform.
      * 
      * @return the initialization as a string
      */
-	public def String getInitialization();
+	def String getInitialization();
 	
 	/**
      * Returns the timer specific to the platform. All platforms
@@ -31,6 +31,6 @@ interface IPlatform {
      * 
      * @return the timer as a string
      */
-	public def String getTimer();
+	def String getTimer();
 	
 }

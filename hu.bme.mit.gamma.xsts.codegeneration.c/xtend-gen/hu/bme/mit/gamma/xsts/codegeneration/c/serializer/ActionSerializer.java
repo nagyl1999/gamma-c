@@ -24,8 +24,6 @@ public class ActionSerializer {
 
   private final ExpressionSerializer expressionSerializer = new ExpressionSerializer();
 
-  private final TypeDeclarationSerializer typeDeclarationSerializer = new TypeDeclarationSerializer();
-
   private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer();
 
   /**

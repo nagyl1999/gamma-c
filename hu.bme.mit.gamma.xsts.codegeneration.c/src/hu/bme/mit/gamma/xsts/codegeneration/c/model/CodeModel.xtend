@@ -11,7 +11,7 @@ class CodeModel extends FileModel {
 	 * 
 	 * @param name the name of the C file to be generated
 	 */
-	public new(String name) {
+	new(String name) {
 		super('''«name.toLowerCase».c''');
 		this.content = '''
 			#include <stdio.h>

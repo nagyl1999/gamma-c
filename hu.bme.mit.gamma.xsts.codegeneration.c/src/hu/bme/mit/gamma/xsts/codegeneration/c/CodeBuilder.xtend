@@ -1,65 +1,114 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c
 
-import java.util.ArrayList;
-import hu.bme.mit.gamma.xsts.model.*;
-import hu.bme.mit.gamma.xsts.codegeneration.c.model.*;
-import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.*;
-
-import java.io.File;
-import java.util.HashSet
+import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation
+import hu.bme.mit.gamma.expression.model.VariableDeclaration
+import hu.bme.mit.gamma.lowlevel.xsts.transformation.VariableGroupRetriever
+import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel
+import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
+import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ActionSerializer
+import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ExpressionSerializer
+import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.TypeDeclarationSerializer
+import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer
+import hu.bme.mit.gamma.xsts.model.XSTS
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.ArrayList
+import java.util.HashSet
 import org.eclipse.emf.common.util.URI
-import hu.bme.mit.gamma.expression.model.TypeReference
-import hu.bme.mit.gamma.expression.model.VariableDeclaration
-import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
-import hu.bme.mit.gamma.lowlevel.xsts.transformation.VariableGroupRetriever
-import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation
 
+/**
+ * The {@code CodeBuilder} class implements the {@code IStatechartCode} interface and is responsible for generating C code from an XSTS model.
+ */
 class CodeBuilder implements IStatechartCode {
-	
-	private XSTS xsts;
-	private String name;
-	private String stName;
-	
-	private CodeModel code;
-	private HeaderModel header;
-	
-	private SupportedPlatforms platform = SupportedPlatforms.UNIX;
-	
-	private final ActionSerializer actionSerializer = new ActionSerializer;
-	private final ExpressionSerializer expressionSerializer = new ExpressionSerializer;
-	private final VariableGroupRetriever variableGroupRetriever = VariableGroupRetriever.INSTANCE;
-	private final TypeDeclarationSerializer typeDeclarationSerializer = new TypeDeclarationSerializer;
-	private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
-	
-	private HashSet<VariableDeclaration> inputs = new HashSet();
-	private HashSet<VariableDeclaration> outputs = new HashSet();
+
+	/**
+	 * The XSTS (Extended Symbolic Transition Systems) used for code generation.
+	 */
+	XSTS xsts;
+	/**
+ 	 * The name of the component.
+ 	 */
+	String name;
+	/**
+ 	 * The name of the statechart.
+	 */
+	String stName;
+
+	/**
+	 * The code model for generating code.
+	 */
+	CodeModel code;
+	/**
+	 * The header model for generating code.
+ 	 */
+	HeaderModel header;
+
+	/**
+	 * The supported platform for code generation.
+	 */
+	SupportedPlatforms platform = SupportedPlatforms.UNIX;
+
+	/* Serializers used for code generation */
+	final ActionSerializer actionSerializer = new ActionSerializer;
+	final ExpressionSerializer expressionSerializer = new ExpressionSerializer;
+	final VariableGroupRetriever variableGroupRetriever = VariableGroupRetriever.INSTANCE;
+	final TypeDeclarationSerializer typeDeclarationSerializer = new TypeDeclarationSerializer;
+	final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
+
+	/**
+	 * The set of input variable declarations.
+	 */
+	HashSet<VariableDeclaration> inputs = new HashSet();
+	/**
+	 * The set of output variable declarations.
+ 	 */
+	HashSet<VariableDeclaration> outputs = new HashSet();
+	/**
+	 * The list of components within the system. It is used to determine wether 'statechart->' is neccesarry.
+	 */
 	public static ArrayList<String> componentVariables = new ArrayList();
-	
-	public new(XSTS xsts) {
+
+	/**
+     * Constructs a {@code CodeBuilder} object with the given {@code XSTS}.
+     * 
+     * @param xsts the XSTS (Extended Symbolic Transition Systems) used for code generation
+     */
+	new(XSTS xsts) {
 		this.xsts = xsts;
 		this.name = xsts.name.toFirstUpper;
 		this.stName = name + "Statechart";
+		
 		/* code files */
 		this.code = new CodeModel(name);
 		this.header = new HeaderModel(name);
+		
 		/* all non-local variable names */
-		xsts.variableDeclarations.forEach[variableDeclaration |
-    		componentVariables.add(variableDeclaration.name)
+		xsts.variableDeclarations.forEach [ variableDeclaration |
+			componentVariables.add(variableDeclaration.name)
 		];
+		
 		/* in & out events and parameters in a unique set */
 		inputs.addAll(variableGroupRetriever.getSystemInEventVariableGroup(xsts).variables);
 		inputs.addAll(variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).variables);
 		outputs.addAll(variableGroupRetriever.getSystemOutEventVariableGroup(xsts).variables);
 		outputs.addAll(variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).variables);
 	}
-	
-	public override setPlatform(SupportedPlatforms platform) {
+
+	/**
+     * Sets the platform for code generation.
+     * 
+     * @param platform the platform
+     */
+	override setPlatform(SupportedPlatforms platform) {
 		this.platform = platform;
 	}
-	
-	public override void constructHeader() {
+
+	/**
+     * Constructs the statechart's header code.
+     */
+	override void constructHeader() {
 		/* Enum Type Declarations */
 		header.addContent('''«FOR typeDeclaration : xsts.typeDeclarations SEPARATOR '\n'»
 			«typeDeclarationSerializer.serialize(typeDeclaration)»
@@ -78,7 +127,7 @@ class CodeBuilder implements IStatechartCode {
 				«ENDFOR»
 			} «stName»;
 		''');
-		
+
 		/* Declare functions */
 		header.addContent('''
 			/* Reset component «name» */
@@ -96,14 +145,17 @@ class CodeBuilder implements IStatechartCode {
 			/* Run cycle in component «name» */
 			void runCycle«stName»(«stName»* statechart);
 		''');
-		
+
 		/* End if in header guard */
 		header.addContent('''
 			#endif /* «name.toUpperCase»_HEADER */
 		''');
 	}
-	
-	public override void constructCode() {
+
+	/**
+     * Constructs the statechart's C code.
+     */
+	override void constructCode() {
 		/* Reset struct */
 		code.addContent('''
 			/* Reset component «name» */
@@ -111,7 +163,7 @@ class CodeBuilder implements IStatechartCode {
 				«actionSerializer.serialize(xsts.variableInitializingTransition.action)»
 			}
 		''');
-		
+
 		/* Initialize struct */
 		code.addContent('''
 			/* Initialize component «name» */
@@ -119,7 +171,7 @@ class CodeBuilder implements IStatechartCode {
 				«actionSerializer.serialize(xsts.configurationInitializingTransition.action)»
 			}
 		''');
-		
+
 		/* Entry Events */
 		code.addContent('''
 			/* Entry event of component «name» */
@@ -127,7 +179,7 @@ class CodeBuilder implements IStatechartCode {
 				«actionSerializer.serialize(xsts.entryEventTransition.action)»
 			}
 		''');
-		
+
 		/* Reset In Events */
 		code.addContent('''
 			/* Clear input events of component «name» */
@@ -135,7 +187,7 @@ class CodeBuilder implements IStatechartCode {
 				«FOR input : inputs SEPARATOR '\n'»statechart->«input.name» = «expressionSerializer.serialize(input.expression)»;«ENDFOR»
 			}
 		''');
-		
+
 		/* Reset Out Events */
 		code.addContent('''
 			/* Clear output events of component «name» */
@@ -143,7 +195,7 @@ class CodeBuilder implements IStatechartCode {
 				«FOR output : outputs SEPARATOR '\n'»statechart->«output.name» = «expressionSerializer.serialize(output.expression)»;«ENDFOR»
 			}
 		''');
-		
+
 		/* Transitions */
 		code.addContent('''
 			/* Transitions of component «name» */
@@ -151,7 +203,7 @@ class CodeBuilder implements IStatechartCode {
 				«FOR transition : xsts.transitions SEPARATOR '\n'»«actionSerializer.serialize(transition.action)»«ENDFOR»
 			}
 		''');
-		
+
 		/* Run cycle */
 		code.addContent('''
 			/* Run cycle of component «name» */
@@ -163,20 +215,25 @@ class CodeBuilder implements IStatechartCode {
 		''');
 	}
 	
-	public override void save(URI uri) {
+	/**
+     * Saves the generated code and header models to the specified URI.
+     * 
+     * @param uri the URI to save the models to
+     */
+	override void save(URI uri) {
 		/* create src-gen if not present */
 		var URI local = uri.appendSegment("src-gen");
 		if (!new File(local.toFileString()).exists())
 			Files.createDirectories(Paths.get(local.toFileString()));
-			
+
 		/* create c codegen folder if not present */
 		local = local.appendSegment(name.toLowerCase)
 		if (!new File(local.toFileString()).exists())
 			Files.createDirectories(Paths.get(local.toFileString()));
-		
+
 		/* save models */
 		code.save(local);
 		header.save(local);
 	}
-	
+
 }

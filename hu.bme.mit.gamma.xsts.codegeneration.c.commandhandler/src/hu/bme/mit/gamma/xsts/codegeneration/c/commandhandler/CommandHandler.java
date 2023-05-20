@@ -2,7 +2,6 @@ package hu.bme.mit.gamma.xsts.codegeneration.c.commandhandler;
 
 import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -10,15 +9,16 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-
-import hu.bme.mit.gamma.xsts.model.*;
-import hu.bme.mit.gamma.xsts.codegeneration.c.*;
+import hu.bme.mit.gamma.xsts.codegeneration.c.CodeBuilder;
+import hu.bme.mit.gamma.xsts.codegeneration.c.IStatechartCode;
+import hu.bme.mit.gamma.xsts.codegeneration.c.WrapperBuilder;
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms;
+import hu.bme.mit.gamma.xsts.model.XSTS;
 
 public class CommandHandler extends AbstractHandler {
 	

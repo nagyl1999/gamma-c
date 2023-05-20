@@ -5,7 +5,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import org.eclipse.emf.common.util.URI
 
-
 /**
  * Represents a file in the generated C code.
  */
@@ -26,7 +25,7 @@ abstract class FileModel {
      * 
      * @param name the name of the file
      */
-	public new(String name) {
+	new(String name) {
 		this.name = name
 	}
 	
@@ -35,7 +34,7 @@ abstract class FileModel {
      * 
      * @param uri the URI where the file should be saved
      */
-	public def void save(URI uri) {
+	def void save(URI uri) {
 		val URI local = uri.appendSegment(name);
 		if (new File(local.toFileString()).exists())
 			Files.delete(Paths.get(local.toFileString()));
@@ -49,7 +48,7 @@ abstract class FileModel {
      * 
      * @param content the content to be added to the file
      */
-	public def void addContent(String content) {
+	def void addContent(String content) {
 		this.content += NEW_LINE + content;
 	}
 	
@@ -58,7 +57,7 @@ abstract class FileModel {
      * 
      * @return the content of the file
      */
-	public override String toString() {
+	override String toString() {
 		return this.content;
 	}
 	

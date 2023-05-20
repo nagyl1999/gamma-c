@@ -1,6 +1,35 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c.serializer
 
-import hu.bme.mit.gamma.expression.model.*;
+import hu.bme.mit.gamma.expression.model.AddExpression
+import hu.bme.mit.gamma.expression.model.AndExpression
+import hu.bme.mit.gamma.expression.model.DecimalLiteralExpression
+import hu.bme.mit.gamma.expression.model.DirectReferenceExpression
+import hu.bme.mit.gamma.expression.model.DivideExpression
+import hu.bme.mit.gamma.expression.model.ElseExpression
+import hu.bme.mit.gamma.expression.model.EnumerationLiteralExpression
+import hu.bme.mit.gamma.expression.model.EnumerationTypeDefinition
+import hu.bme.mit.gamma.expression.model.EqualityExpression
+import hu.bme.mit.gamma.expression.model.Expression
+import hu.bme.mit.gamma.expression.model.FalseExpression
+import hu.bme.mit.gamma.expression.model.GreaterEqualExpression
+import hu.bme.mit.gamma.expression.model.GreaterExpression
+import hu.bme.mit.gamma.expression.model.IfThenElseExpression
+import hu.bme.mit.gamma.expression.model.ImplyExpression
+import hu.bme.mit.gamma.expression.model.InequalityExpression
+import hu.bme.mit.gamma.expression.model.IntegerLiteralExpression
+import hu.bme.mit.gamma.expression.model.LessEqualExpression
+import hu.bme.mit.gamma.expression.model.LessExpression
+import hu.bme.mit.gamma.expression.model.ModExpression
+import hu.bme.mit.gamma.expression.model.MultiplyExpression
+import hu.bme.mit.gamma.expression.model.NotExpression
+import hu.bme.mit.gamma.expression.model.OrExpression
+import hu.bme.mit.gamma.expression.model.RationalLiteralExpression
+import hu.bme.mit.gamma.expression.model.SubtractExpression
+import hu.bme.mit.gamma.expression.model.TrueExpression
+import hu.bme.mit.gamma.expression.model.TypeDeclaration
+import hu.bme.mit.gamma.expression.model.UnaryMinusExpression
+import hu.bme.mit.gamma.expression.model.UnaryPlusExpression
+import hu.bme.mit.gamma.expression.model.XorExpression
 import hu.bme.mit.gamma.xsts.codegeneration.c.CodeBuilder
 
 /**

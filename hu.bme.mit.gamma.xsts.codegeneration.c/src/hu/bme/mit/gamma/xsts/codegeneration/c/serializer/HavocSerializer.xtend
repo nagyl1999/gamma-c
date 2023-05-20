@@ -1,15 +1,14 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c.serializer
 
-import java.util.Random
-
-import hu.bme.mit.gamma.expression.model.Expression
+import hu.bme.mit.gamma.expression.model.BooleanTypeDefinition
+import hu.bme.mit.gamma.expression.model.DecimalTypeDefinition
 import hu.bme.mit.gamma.expression.model.DirectReferenceExpression
 import hu.bme.mit.gamma.expression.model.EnumerationTypeDefinition
-import hu.bme.mit.gamma.expression.model.Type
-import hu.bme.mit.gamma.expression.model.BooleanTypeDefinition
+import hu.bme.mit.gamma.expression.model.Expression
 import hu.bme.mit.gamma.expression.model.IntegerTypeDefinition
 import hu.bme.mit.gamma.expression.model.RationalTypeDefinition
-import hu.bme.mit.gamma.expression.model.DecimalTypeDefinition
+import hu.bme.mit.gamma.expression.model.Type
+import java.util.Random
 
 /**
  * Serializes different types of definitions and expressions into their string representation.
@@ -18,8 +17,7 @@ import hu.bme.mit.gamma.expression.model.DecimalTypeDefinition
  */
 class HavocSerializer {
 	
-	private Random random = new Random;
-	private final ExpressionSerializer expressionSerializer = new ExpressionSerializer;
+	Random random = new Random;
 	
 	/**
      * Throws an exception for unsupported types.

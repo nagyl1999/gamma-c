@@ -1,8 +1,8 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c.serializer
 
 import hu.bme.mit.gamma.expression.model.EnumerationTypeDefinition
-import hu.bme.mit.gamma.expression.model.TypeDeclaration
 import hu.bme.mit.gamma.expression.model.Type
+import hu.bme.mit.gamma.expression.model.TypeDeclaration
 
 /**
  * A serializer for type declarations.

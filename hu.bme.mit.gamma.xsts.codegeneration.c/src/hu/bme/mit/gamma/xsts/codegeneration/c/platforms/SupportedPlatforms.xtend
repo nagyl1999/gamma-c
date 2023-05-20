@@ -17,7 +17,7 @@ class Platforms {
 	/**
      * Map to store the platform instances.
      */
-	private static final HashMap<SupportedPlatforms, IPlatform> platforms = addPlatforms();
+	static final HashMap<SupportedPlatforms, IPlatform> platforms = addPlatforms();
 	
 	/**
      * Adds the platform instances to the map.
@@ -39,7 +39,7 @@ class Platforms {
      * @param platform The supported platform.
      * @return The platform instance.
      */
-	public static def IPlatform get(SupportedPlatforms platform) {
+	static def IPlatform get(SupportedPlatforms platform) {
 		return platforms.get(platform);
 	}
 	

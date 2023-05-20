@@ -24,26 +24,58 @@ import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
 public class WrapperBuilder implements IStatechartCode {
+  /**
+   * The XSTS (Extended Symbolic Transition Systems) used for code generation.
+   */
   private XSTS xsts;
 
+  /**
+   * The name of the wrapper component.
+   */
   private String name;
 
+  /**
+   * The name of the original statechart.
+   */
   private String stName;
 
-  private HashSet<VariableDeclaration> inputs = new HashSet<VariableDeclaration>();
-
-  private HashSet<VariableDeclaration> outputs = new HashSet<VariableDeclaration>();
-
+  /**
+   * The code model for generating wrapper code.
+   */
   private CodeModel code;
 
+  /**
+   * The header model for generating wrapper code.
+   */
   private HeaderModel header;
 
+  /**
+   * The supported platform for code generation.
+   */
   private SupportedPlatforms platform = SupportedPlatforms.UNIX;
 
+  /**
+   * Serializers used for code generation
+   */
   private final VariableGroupRetriever variableGroupRetriever = VariableGroupRetriever.INSTANCE;
 
   private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer();
 
+  /**
+   * The set of input variable declarations.
+   */
+  private HashSet<VariableDeclaration> inputs = new HashSet<VariableDeclaration>();
+
+  /**
+   * The set of output variable declarations.
+   */
+  private HashSet<VariableDeclaration> outputs = new HashSet<VariableDeclaration>();
+
+  /**
+   * Constructs a WrapperBuilder object.
+   * 
+   * @param xsts The XSTS (Extended Symbolic Transition Systems) used for wrapper code generation.
+   */
   public WrapperBuilder(final XSTS xsts) {
     this.xsts = xsts;
     String _firstUpper = StringExtensions.toFirstUpper(xsts.getName());
@@ -62,11 +94,19 @@ public class WrapperBuilder implements IStatechartCode {
     this.outputs.addAll(this.variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).getVariables());
   }
 
+  /**
+   * Sets the platform for code generation.
+   * 
+   * @param platform the platform
+   */
   @Override
   public void setPlatform(final SupportedPlatforms platform) {
     this.platform = platform;
   }
 
+  /**
+   * Constructs the statechart wrapper's header code.
+   */
   @Override
   public void constructHeader() {
     StringConcatenation _builder = new StringConcatenation();
@@ -196,6 +236,9 @@ public class WrapperBuilder implements IStatechartCode {
     this.header.addContent(_builder_6.toString());
   }
 
+  /**
+   * Constructs the statechart wrapper's C code.
+   */
   @Override
   public void constructCode() {
     StringConcatenation _builder = new StringConcatenation();
@@ -390,6 +433,11 @@ public class WrapperBuilder implements IStatechartCode {
     this.code.addContent(_builder_2.toString());
   }
 
+  /**
+   * Saves the generated wrapper code and header models to the specified URI.
+   * 
+   * @param uri the URI to save the models to
+   */
   @Override
   public void save(final URI uri) {
     try {

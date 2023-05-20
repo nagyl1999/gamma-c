@@ -1,43 +1,76 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c
 
-import hu.bme.mit.gamma.xsts.model.XSTS
-import org.eclipse.emf.common.util.URI
+import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation
+import hu.bme.mit.gamma.expression.model.VariableDeclaration
+import hu.bme.mit.gamma.lowlevel.xsts.transformation.VariableGroupRetriever
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
+import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer
+import hu.bme.mit.gamma.xsts.model.XSTS
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer
-import hu.bme.mit.gamma.expression.model.VariableDeclaration
 import java.util.HashSet
-import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms
-import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
-import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation
-import hu.bme.mit.gamma.lowlevel.xsts.transformation.VariableGroupRetriever
+import org.eclipse.emf.common.util.URI
 
 class WrapperBuilder implements IStatechartCode {
 	
-	private XSTS xsts;
-	private String name;
-	private String stName;
-	private HashSet<VariableDeclaration> inputs = new HashSet();
-	private HashSet<VariableDeclaration> outputs = new HashSet();
+	/**
+	 * The XSTS (Extended Symbolic Transition Systems) used for code generation.
+	 */
+	XSTS xsts;
+	/**
+ 	 * The name of the wrapper component.
+ 	 */
+	String name;
+	/**
+ 	 * The name of the original statechart.
+	 */
+	String stName;
 	
-	private CodeModel code;
-	private HeaderModel header;
+	/**
+	 * The code model for generating wrapper code.
+	 */
+	CodeModel code;
+	/**
+	 * The header model for generating wrapper code.
+ 	 */
+	HeaderModel header;
 	
-	private SupportedPlatforms platform = SupportedPlatforms.UNIX;
+	/**
+	 * The supported platform for code generation.
+	 */
+	SupportedPlatforms platform = SupportedPlatforms.UNIX;
 	
-	private final VariableGroupRetriever variableGroupRetriever = VariableGroupRetriever.INSTANCE;
-	private final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
+	/* Serializers used for code generation */
+	final VariableGroupRetriever variableGroupRetriever = VariableGroupRetriever.INSTANCE;
+	final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
 	
-	public new(XSTS xsts) {
+	/**
+	 * The set of input variable declarations.
+	 */
+	HashSet<VariableDeclaration> inputs = new HashSet();
+	/**
+	 * The set of output variable declarations.
+ 	 */
+	HashSet<VariableDeclaration> outputs = new HashSet();
+	
+	/**
+     * Constructs a WrapperBuilder object.
+     * 
+     * @param xsts The XSTS (Extended Symbolic Transition Systems) used for wrapper code generation.
+     */
+	new(XSTS xsts) {
 		this.xsts = xsts
 		this.name = xsts.name.toFirstUpper + "Wrapper";
 		this.stName = xsts.name + "Statechart";
+		
 		/* code files */
 		this.code = new CodeModel(name);
 		this.header = new HeaderModel(name);
+		
 		/* in & out events and parameters in a unique set */
 		inputs.addAll(variableGroupRetriever.getSystemInEventVariableGroup(xsts).variables);
 		inputs.addAll(variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).variables);
@@ -45,10 +78,18 @@ class WrapperBuilder implements IStatechartCode {
 		outputs.addAll(variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).variables);
 	}
 	
-	public override setPlatform(SupportedPlatforms platform) {
+	/**
+     * Sets the platform for code generation.
+     * 
+     * @param platform the platform
+     */
+	override setPlatform(SupportedPlatforms platform) {
 		this.platform = platform;
 	}
 	
+	/**
+     * Constructs the statechart wrapper's header code.
+     */
 	override constructHeader() {
 		/* Add extra headers */
 		header.addContent('''
@@ -109,6 +150,9 @@ class WrapperBuilder implements IStatechartCode {
 		''');
 	}
 	
+	/**
+     * Constructs the statechart wrapper's C code.
+     */
 	override constructCode() {
 		/* Initialize wrapper & Run cycle*/
 		code.addContent('''
@@ -165,6 +209,11 @@ class WrapperBuilder implements IStatechartCode {
 		''');
 	}
 	
+	/**
+     * Saves the generated wrapper code and header models to the specified URI.
+     * 
+     * @param uri the URI to save the models to
+     */
 	override save(URI uri) {
 		/* create src-gen if not present */
 		var URI local = uri.appendSegment("src-gen");
