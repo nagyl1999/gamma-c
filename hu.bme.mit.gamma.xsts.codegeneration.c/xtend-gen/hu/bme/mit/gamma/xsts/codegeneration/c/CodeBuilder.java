@@ -1,15 +1,12 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c;
 
 import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation;
-import hu.bme.mit.gamma.expression.model.Type;
 import hu.bme.mit.gamma.expression.model.TypeDeclaration;
-import hu.bme.mit.gamma.expression.model.TypeReference;
 import hu.bme.mit.gamma.expression.model.VariableDeclaration;
 import hu.bme.mit.gamma.expression.model.VariableDeclarationAnnotation;
 import hu.bme.mit.gamma.lowlevel.xsts.transformation.VariableGroupRetriever;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel;
-import hu.bme.mit.gamma.xsts.codegeneration.c.model.TestModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ActionSerializer;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.ExpressionSerializer;
@@ -41,8 +38,6 @@ public class CodeBuilder implements IStatechartCode {
 
   private CodeModel code;
 
-  private TestModel test;
-
   private HeaderModel header;
 
   private SupportedPlatforms platform = SupportedPlatforms.UNIX;
@@ -69,8 +64,6 @@ public class CodeBuilder implements IStatechartCode {
     this.stName = (this.name + "Statechart");
     CodeModel _codeModel = new CodeModel(this.name);
     this.code = _codeModel;
-    TestModel _testModel = new TestModel(this.name);
-    this.test = _testModel;
     HeaderModel _headerModel = new HeaderModel(this.name);
     this.header = _headerModel;
     final Consumer<VariableDeclaration> _function = (VariableDeclaration variableDeclaration) -> {
@@ -81,7 +74,6 @@ public class CodeBuilder implements IStatechartCode {
     this.inputs.addAll(this.variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).getVariables());
     this.outputs.addAll(this.variableGroupRetriever.getSystemOutEventVariableGroup(xsts).getVariables());
     this.outputs.addAll(this.variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).getVariables());
-    this.constructTest();
   }
 
   @Override
@@ -403,82 +395,6 @@ public class CodeBuilder implements IStatechartCode {
     this.code.addContent(_builder_6.toString());
   }
 
-  public void constructTest() {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("void printStates(");
-    _builder.append(this.stName);
-    _builder.append("* statechart) {");
-    _builder.newLineIfNotEmpty();
-    {
-      EList<VariableDeclaration> _variableDeclarations = this.xsts.getVariableDeclarations();
-      for(final VariableDeclaration variableDeclaration : _variableDeclarations) {
-        {
-          Type _type = variableDeclaration.getType();
-          if ((_type instanceof TypeReference)) {
-            _builder.append("\t");
-            _builder.append("printf(\"");
-            String _name = variableDeclaration.getName();
-            _builder.append(_name, "\t");
-            _builder.append(": %d\\n\", statechart->");
-            String _name_1 = variableDeclaration.getName();
-            _builder.append(_name_1, "\t");
-            _builder.append(");");
-            _builder.newLineIfNotEmpty();
-          }
-        }
-      }
-    }
-    _builder.append("}");
-    _builder.newLine();
-    this.test.addContent(_builder.toString());
-    StringConcatenation _builder_1 = new StringConcatenation();
-    _builder_1.append("/* Main function */");
-    _builder_1.newLine();
-    _builder_1.append("int main() {");
-    _builder_1.newLine();
-    _builder_1.append("\t");
-    _builder_1.append(this.stName, "\t");
-    _builder_1.append(" statechart;");
-    _builder_1.newLineIfNotEmpty();
-    _builder_1.newLine();
-    _builder_1.append("\t");
-    _builder_1.append("reset");
-    _builder_1.append(this.stName, "\t");
-    _builder_1.append("(&statechart);");
-    _builder_1.newLineIfNotEmpty();
-    _builder_1.append("\t");
-    _builder_1.append("initialize");
-    _builder_1.append(this.stName, "\t");
-    _builder_1.append("(&statechart);");
-    _builder_1.newLineIfNotEmpty();
-    _builder_1.append("\t");
-    _builder_1.append("entryEvents");
-    _builder_1.append(this.stName, "\t");
-    _builder_1.append("(&statechart);");
-    _builder_1.newLineIfNotEmpty();
-    _builder_1.newLine();
-    _builder_1.append("\t");
-    _builder_1.append("while (1) {");
-    _builder_1.newLine();
-    _builder_1.append("\t\t");
-    _builder_1.append("printStates(&statechart);");
-    _builder_1.newLine();
-    _builder_1.append("\t\t");
-    _builder_1.append("runCycle");
-    _builder_1.append(this.stName, "\t\t");
-    _builder_1.append("(&statechart);");
-    _builder_1.newLineIfNotEmpty();
-    _builder_1.append("\t\t");
-    _builder_1.append("sleep(1);");
-    _builder_1.newLine();
-    _builder_1.append("\t");
-    _builder_1.append("}");
-    _builder_1.newLine();
-    _builder_1.append("}");
-    _builder_1.newLine();
-    this.test.addContent(_builder_1.toString());
-  }
-
   @Override
   public void save(final URI uri) {
     try {
@@ -497,7 +413,6 @@ public class CodeBuilder implements IStatechartCode {
         Files.createDirectories(Paths.get(local.toFileString()));
       }
       this.code.save(local);
-      this.test.save(local);
       this.header.save(local);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

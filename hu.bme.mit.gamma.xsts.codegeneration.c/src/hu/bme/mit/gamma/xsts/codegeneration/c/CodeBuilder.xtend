@@ -23,7 +23,6 @@ class CodeBuilder implements IStatechartCode {
 	private String stName;
 	
 	private CodeModel code;
-	private TestModel test;
 	private HeaderModel header;
 	
 	private SupportedPlatforms platform = SupportedPlatforms.UNIX;
@@ -44,7 +43,6 @@ class CodeBuilder implements IStatechartCode {
 		this.stName = name + "Statechart";
 		/* code files */
 		this.code = new CodeModel(name);
-		this.test = new TestModel(name);
 		this.header = new HeaderModel(name);
 		/* all non-local variable names */
 		xsts.variableDeclarations.forEach[variableDeclaration |
@@ -55,8 +53,6 @@ class CodeBuilder implements IStatechartCode {
 		inputs.addAll(variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).variables);
 		outputs.addAll(variableGroupRetriever.getSystemOutEventVariableGroup(xsts).variables);
 		outputs.addAll(variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).variables);
-		/* optional */
-		this.constructTest();
 	}
 	
 	public override setPlatform(SupportedPlatforms platform) {
@@ -167,37 +163,6 @@ class CodeBuilder implements IStatechartCode {
 		''');
 	}
 	
-	public def void constructTest() {
-		/* Print states */
-		test.addContent('''
-		void printStates(«stName»* statechart) {
-			«FOR variableDeclaration : xsts.variableDeclarations»
-				«IF variableDeclaration.type instanceof TypeReference»
-					printf("«variableDeclaration.name»: %d\n", statechart->«variableDeclaration.name»);
-				«ENDIF»
-			«ENDFOR»
-		}
-		''');
-		
-		/* Main function */
-		test.addContent('''
-			/* Main function */
-			int main() {
-				«stName» statechart;
-			
-				reset«stName»(&statechart);
-				initialize«stName»(&statechart);
-				entryEvents«stName»(&statechart);
-			
-				while (1) {
-					printStates(&statechart);
-					runCycle«stName»(&statechart);
-					sleep(1);
-				}
-			}
-		''');
-	}
-	
 	public override void save(URI uri) {
 		/* create src-gen if not present */
 		var URI local = uri.appendSegment("src-gen");
@@ -211,7 +176,6 @@ class CodeBuilder implements IStatechartCode {
 		
 		/* save models */
 		code.save(local);
-		test.save(local);
 		header.save(local);
 	}
 	
