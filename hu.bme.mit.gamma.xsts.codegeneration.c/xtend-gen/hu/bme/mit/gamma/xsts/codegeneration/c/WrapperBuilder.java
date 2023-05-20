@@ -22,6 +22,9 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.StringExtensions;
 
+/**
+ * The WrapperBuilder class implements the IStatechartCode interface and is responsible for generating the wrapper code.
+ */
 @SuppressWarnings("all")
 public class WrapperBuilder implements IStatechartCode {
   /**

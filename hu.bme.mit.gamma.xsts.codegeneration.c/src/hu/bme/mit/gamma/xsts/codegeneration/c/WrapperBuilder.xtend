@@ -15,6 +15,9 @@ import java.nio.file.Paths
 import java.util.HashSet
 import org.eclipse.emf.common.util.URI
 
+/**
+ * The WrapperBuilder class implements the IStatechartCode interface and is responsible for generating the wrapper code.
+ */
 class WrapperBuilder implements IStatechartCode {
 	
 	/**
