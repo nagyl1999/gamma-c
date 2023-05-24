@@ -6,6 +6,7 @@ import hu.bme.mit.gamma.expression.model.VariableDeclarationAnnotation;
 import hu.bme.mit.gamma.lowlevel.xsts.transformation.VariableGroupRetriever;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel;
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel;
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.IPlatform;
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms;
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms;
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.Set;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtend2.lib.StringConcatenation;
@@ -67,12 +69,12 @@ public class WrapperBuilder implements IStatechartCode {
   /**
    * The set of input variable declarations.
    */
-  private HashSet<VariableDeclaration> inputs = new HashSet<VariableDeclaration>();
+  private Set<VariableDeclaration> inputs = new HashSet<VariableDeclaration>();
 
   /**
    * The set of output variable declarations.
    */
-  private HashSet<VariableDeclaration> outputs = new HashSet<VariableDeclaration>();
+  private Set<VariableDeclaration> outputs = new HashSet<VariableDeclaration>();
 
   /**
    * Constructs a WrapperBuilder object.
@@ -314,7 +316,9 @@ public class WrapperBuilder implements IStatechartCode {
         _builder.append(".");
         String _name_1 = variable.getName();
         _builder.append(_name_1, "\t");
-        _builder.append(" += milliseconds;");
+        _builder.append(" += ");
+        _builder.append(IPlatform.CLOCK_VARIABLE_NAME, "\t");
+        _builder.append(";");
         _builder.newLineIfNotEmpty();
       }
     }

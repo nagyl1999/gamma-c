@@ -19,6 +19,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -79,17 +81,17 @@ public class CodeBuilder implements IStatechartCode {
   /**
    * The set of input variable declarations.
    */
-  private HashSet<VariableDeclaration> inputs = new HashSet<VariableDeclaration>();
+  private Set<VariableDeclaration> inputs = new HashSet<VariableDeclaration>();
 
   /**
    * The set of output variable declarations.
    */
-  private HashSet<VariableDeclaration> outputs = new HashSet<VariableDeclaration>();
+  private Set<VariableDeclaration> outputs = new HashSet<VariableDeclaration>();
 
   /**
    * The list of components within the system. It is used to determine wether 'statechart->' is neccesarry.
    */
-  public static ArrayList<String> componentVariables = new ArrayList<String>();
+  public static List<String> componentVariables = new ArrayList<String>();
 
   /**
    * Constructs a {@code CodeBuilder} object with the given {@code XSTS}.

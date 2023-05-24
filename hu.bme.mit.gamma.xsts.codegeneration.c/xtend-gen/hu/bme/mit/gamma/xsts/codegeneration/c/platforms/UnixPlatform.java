@@ -55,8 +55,10 @@ public class UnixPlatform implements IPlatform {
     _builder.newLine();
     _builder.append("timersub(&statechart->tval_after, &statechart->tval_before, &statechart->tval_result);");
     _builder.newLine();
-    _builder.append("unsigned int milliseconds = (unsigned int)statechart->tval_result.tv_sec * 1000 + (unsigned int)statechart->tval_result.tv_usec / 1000;");
-    _builder.newLine();
+    _builder.append("unsigned int ");
+    _builder.append(IPlatform.CLOCK_VARIABLE_NAME);
+    _builder.append(" = (unsigned int)statechart->tval_result.tv_sec * 1000 + (unsigned int)statechart->tval_result.tv_usec / 1000;");
+    _builder.newLineIfNotEmpty();
     _builder.append("gettimeofday(&statechart->tval_before, NULL);");
     _builder.newLine();
     return _builder.toString();

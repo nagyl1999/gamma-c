@@ -5,6 +5,7 @@ import hu.bme.mit.gamma.expression.model.VariableDeclaration
 import hu.bme.mit.gamma.lowlevel.xsts.transformation.VariableGroupRetriever
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.CodeModel
 import hu.bme.mit.gamma.xsts.codegeneration.c.model.HeaderModel
+import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.IPlatform
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.Platforms
 import hu.bme.mit.gamma.xsts.codegeneration.c.platforms.SupportedPlatforms
 import hu.bme.mit.gamma.xsts.codegeneration.c.serializer.VariableDeclarationSerializer
@@ -13,6 +14,7 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.HashSet
+import java.util.Set
 import org.eclipse.emf.common.util.URI
 
 /**
@@ -54,11 +56,11 @@ class WrapperBuilder implements IStatechartCode {
 	/**
 	 * The set of input variable declarations.
 	 */
-	HashSet<VariableDeclaration> inputs = new HashSet();
+	Set<VariableDeclaration> inputs = new HashSet();
 	/**
 	 * The set of output variable declarations.
  	 */
-	HashSet<VariableDeclaration> outputs = new HashSet();
+	Set<VariableDeclaration> outputs = new HashSet();
 	
 	/**
      * Constructs a WrapperBuilder object.
@@ -172,7 +174,7 @@ class WrapperBuilder implements IStatechartCode {
 				«Platforms.get(platform).getTimer()»
 				«FOR variable : variableGroupRetriever.getTimeoutGroup(xsts).variables»
 					/* Add elapsed time to timeout variable «variable.name» */
-					statechart->«stName.toLowerCase».«variable.name» += milliseconds;
+					statechart->«stName.toLowerCase».«variable.name» += «IPlatform.CLOCK_VARIABLE_NAME»;
 				«ENDFOR»
 			}
 			

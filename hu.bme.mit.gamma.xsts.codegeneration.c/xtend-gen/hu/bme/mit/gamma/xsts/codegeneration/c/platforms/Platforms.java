@@ -1,6 +1,7 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c.platforms;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class to manage the platforms and retrieve platform instances.
@@ -10,7 +11,7 @@ public class Platforms {
   /**
    * Map to store the platform instances.
    */
-  private static final HashMap<SupportedPlatforms, IPlatform> platforms = Platforms.addPlatforms();
+  private static final Map<SupportedPlatforms, IPlatform> platforms = Platforms.addPlatforms();
 
   /**
    * Adds the platform instances to the map.

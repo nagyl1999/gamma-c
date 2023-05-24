@@ -1,6 +1,7 @@
 package hu.bme.mit.gamma.xsts.codegeneration.c.platforms
 
 import java.util.HashMap
+import java.util.Map
 
 /**
  * Enum representing the supported platforms.
@@ -17,7 +18,7 @@ class Platforms {
 	/**
      * Map to store the platform instances.
      */
-	static final HashMap<SupportedPlatforms, IPlatform> platforms = addPlatforms();
+	static final Map<SupportedPlatforms, IPlatform> platforms = addPlatforms();
 	
 	/**
      * Adds the platform instances to the map.
