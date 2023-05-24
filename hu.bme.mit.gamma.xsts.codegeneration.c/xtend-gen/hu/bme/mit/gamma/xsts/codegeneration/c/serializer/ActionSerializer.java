@@ -10,6 +10,8 @@
  */
 package hu.bme.mit.gamma.xsts.codegeneration.c.serializer;
 
+import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation;
+import hu.bme.mit.gamma.expression.model.VariableDeclarationAnnotation;
 import hu.bme.mit.gamma.xsts.derivedfeatures.XstsDerivedFeatures;
 import hu.bme.mit.gamma.xsts.model.Action;
 import hu.bme.mit.gamma.xsts.model.AssignmentAction;
@@ -24,6 +26,8 @@ import hu.bme.mit.gamma.xsts.model.XSTS;
 import java.util.Arrays;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * This class provides a serializer for actions in XSTS models.
@@ -201,7 +205,13 @@ public class ActionSerializer {
    */
   protected CharSequence _serialize(final VariableDeclarationAction action) {
     StringConcatenation _builder = new StringConcatenation();
-    String _serialize = this.variableDeclarationSerializer.serialize(action.getVariableDeclaration().getType(), false, action.getVariableDeclaration().getName());
+    final Function1<VariableDeclarationAnnotation, Boolean> _function = (VariableDeclarationAnnotation type) -> {
+      return Boolean.valueOf((type instanceof ClockVariableDeclarationAnnotation));
+    };
+    String _serialize = this.variableDeclarationSerializer.serialize(
+      action.getVariableDeclaration().getType(), 
+      IterableExtensions.<VariableDeclarationAnnotation>exists(action.getVariableDeclaration().getAnnotations(), _function), 
+      action.getVariableDeclaration().getName());
     _builder.append(_serialize);
     _builder.append(" ");
     String _name = action.getVariableDeclaration().getName();

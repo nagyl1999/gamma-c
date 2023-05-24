@@ -133,8 +133,8 @@ class CodeBuilder implements IStatechartCode {
 				«FOR variableDeclaration : xsts.variableDeclarations»
 					«variableDeclarationSerializer.serialize(
 						variableDeclaration.type,
-						 variableDeclaration.annotations.exists[type | type instanceof ClockVariableDeclarationAnnotation],
-						  variableDeclaration.name
+						variableDeclaration.annotations.exists[type | type instanceof ClockVariableDeclarationAnnotation],
+						variableDeclaration.name
 					)» «variableDeclaration.name»;
 				«ENDFOR»
 			} «stName»;

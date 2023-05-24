@@ -22,6 +22,7 @@ import hu.bme.mit.gamma.xsts.model.VariableDeclarationAction
 import hu.bme.mit.gamma.xsts.model.XSTS
 
 import static extension hu.bme.mit.gamma.xsts.derivedfeatures.XstsDerivedFeatures.*
+import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation
 
 /**
  * This class provides a serializer for actions in XSTS models.
@@ -125,7 +126,11 @@ class ActionSerializer {
 	 * @return a CharSequence that represents the serialized VariableDeclarationAction
 	 */
 	def dispatch CharSequence serialize(VariableDeclarationAction action) {
-		return '''«variableDeclarationSerializer.serialize(action.variableDeclaration.type, false, action.variableDeclaration.name)» «action.variableDeclaration.name»;''';
+		return '''«variableDeclarationSerializer.serialize(
+			action.variableDeclaration.type, 
+			action.variableDeclaration.annotations.exists[type | type instanceof ClockVariableDeclarationAnnotation],
+			action.variableDeclaration.name
+		)» «action.variableDeclaration.name»;''';
 	}
 	
 	/**
