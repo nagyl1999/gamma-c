@@ -30,6 +30,8 @@ import java.util.List
 import java.util.Set
 import org.eclipse.emf.common.util.URI
 
+import static extension hu.bme.mit.gamma.expression.derivedfeatures.ExpressionModelDerivedFeatures.*
+
 /**
  * The {@code CodeBuilder} class implements the {@code IStatechartCode} interface and is responsible for generating C code from an XSTS model.
  */
@@ -101,11 +103,12 @@ class CodeBuilder implements IStatechartCode {
 			componentVariables.add(variableDeclaration.name)
 		];
 		
-		/* in & out events and parameters in a unique set */
+		/* in & out events and parameters in a unique set, these sets are being used to reset in/outputs between cycles */
+		/* important! only non-persistent parameters are being reset, therefore other parameters will not be included */
 		inputs.addAll(variableGroupRetriever.getSystemInEventVariableGroup(xsts).variables);
-		inputs.addAll(variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).variables);
+		inputs.addAll(variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).variables.filter[it.environmentResettable]);
 		outputs.addAll(variableGroupRetriever.getSystemOutEventVariableGroup(xsts).variables);
-		outputs.addAll(variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).variables);
+		outputs.addAll(variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).variables.filter[it.environmentResettable]);
 	}
 
 	/**

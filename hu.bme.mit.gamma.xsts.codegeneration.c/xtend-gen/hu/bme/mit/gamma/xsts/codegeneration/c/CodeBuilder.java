@@ -10,6 +10,8 @@
  */
 package hu.bme.mit.gamma.xsts.codegeneration.c;
 
+import com.google.common.collect.Iterables;
+import hu.bme.mit.gamma.expression.derivedfeatures.ExpressionModelDerivedFeatures;
 import hu.bme.mit.gamma.expression.model.ClockVariableDeclarationAnnotation;
 import hu.bme.mit.gamma.expression.model.TypeDeclaration;
 import hu.bme.mit.gamma.expression.model.VariableDeclaration;
@@ -121,9 +123,15 @@ public class CodeBuilder implements IStatechartCode {
     };
     xsts.getVariableDeclarations().forEach(_function);
     this.inputs.addAll(this.variableGroupRetriever.getSystemInEventVariableGroup(xsts).getVariables());
-    this.inputs.addAll(this.variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).getVariables());
+    final Function1<VariableDeclaration, Boolean> _function_1 = (VariableDeclaration it) -> {
+      return Boolean.valueOf(ExpressionModelDerivedFeatures.isEnvironmentResettable(it));
+    };
+    Iterables.<VariableDeclaration>addAll(this.inputs, IterableExtensions.<VariableDeclaration>filter(this.variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).getVariables(), _function_1));
     this.outputs.addAll(this.variableGroupRetriever.getSystemOutEventVariableGroup(xsts).getVariables());
-    this.outputs.addAll(this.variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).getVariables());
+    final Function1<VariableDeclaration, Boolean> _function_2 = (VariableDeclaration it) -> {
+      return Boolean.valueOf(ExpressionModelDerivedFeatures.isEnvironmentResettable(it));
+    };
+    Iterables.<VariableDeclaration>addAll(this.outputs, IterableExtensions.<VariableDeclaration>filter(this.variableGroupRetriever.getSystemOutEventParameterVariableGroup(xsts).getVariables(), _function_2));
   }
 
   /**

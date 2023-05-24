@@ -86,7 +86,8 @@ class WrapperBuilder implements IStatechartCode {
 		this.code = new CodeModel(name);
 		this.header = new HeaderModel(name);
 		
-		/* in & out events and parameters in a unique set */
+		/* in & out events and parameters in a unique set, these sets are being used to generate setters/getters representing ports */
+		/* important! in the wrapper we need every parameter regardless of persistency */
 		inputs.addAll(variableGroupRetriever.getSystemInEventVariableGroup(xsts).variables);
 		inputs.addAll(variableGroupRetriever.getSystemInEventParameterVariableGroup(xsts).variables);
 		outputs.addAll(variableGroupRetriever.getSystemOutEventVariableGroup(xsts).variables);
