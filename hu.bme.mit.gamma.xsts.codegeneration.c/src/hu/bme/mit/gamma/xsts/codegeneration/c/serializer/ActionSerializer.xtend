@@ -76,7 +76,7 @@ class ActionSerializer {
  	 * @return a CharSequence that represents the serialized SequentialAction
 	 */
 	def dispatch CharSequence serialize(SequentialAction action) {
-		return '''«FOR xstsSubaction : action.actions SEPARATOR '\n'»«xstsSubaction.serialize»«ENDFOR»''';
+		return '''«FOR xstsSubaction : action.actions SEPARATOR System.lineSeparator»«xstsSubaction.serialize»«ENDFOR»''';
 	}
 	
 	/**
@@ -86,7 +86,7 @@ class ActionSerializer {
 	 * @return a CharSequence that represents the serialized ParallelAction
 	 */
 	def dispatch CharSequence serialize(ParallelAction action) {
-		return '''«FOR xstsSubaction : action.actions SEPARATOR '\n'»«xstsSubaction.serialize»«ENDFOR»''';
+		return '''«FOR xstsSubaction : action.actions SEPARATOR System.lineSeparator»«xstsSubaction.serialize»«ENDFOR»''';
 	}
 	
 	/**
@@ -96,7 +96,7 @@ class ActionSerializer {
 	 * @return a CharSequence that represents the serialized NonDeterministicAction
 	 */
 	def dispatch CharSequence serialize(NonDeterministicAction action) {
-		return '''«FOR xstsSubaction : action.actions SEPARATOR '\n'»«xstsSubaction.serialize»«ENDFOR»''';
+		return '''«FOR xstsSubaction : action.actions SEPARATOR System.lineSeparator»«xstsSubaction.serialize»«ENDFOR»''';
 	}
 	
 	/**

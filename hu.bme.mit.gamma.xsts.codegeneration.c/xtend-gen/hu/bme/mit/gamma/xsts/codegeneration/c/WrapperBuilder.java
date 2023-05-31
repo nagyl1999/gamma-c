@@ -368,7 +368,8 @@ public class WrapperBuilder implements IStatechartCode {
         if (!_hasElements) {
           _hasElements = true;
         } else {
-          _builder_1.appendImmediate("\n", "");
+          String _lineSeparator = System.lineSeparator();
+          _builder_1.appendImmediate(_lineSeparator, "");
         }
         _builder_1.append("/* Setter for ");
         String _firstUpper = StringExtensions.toFirstUpper(variable_1.getName());
@@ -412,7 +413,8 @@ public class WrapperBuilder implements IStatechartCode {
         if (!_hasElements_1) {
           _hasElements_1 = true;
         } else {
-          _builder_2.appendImmediate("\n", "");
+          String _lineSeparator_1 = System.lineSeparator();
+          _builder_2.appendImmediate(_lineSeparator_1, "");
         }
         _builder_2.append("/* Getter for ");
         String _firstUpper_2 = StringExtensions.toFirstUpper(variable_2.getName());

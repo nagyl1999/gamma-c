@@ -125,9 +125,11 @@ class CodeBuilder implements IStatechartCode {
      */
 	override void constructHeader() {
 		/* Enum Type Declarations */
-		header.addContent('''«FOR typeDeclaration : xsts.typeDeclarations SEPARATOR '\n'»
+		header.addContent('''
+		«FOR typeDeclaration : xsts.typeDeclarations SEPARATOR System.lineSeparator»
 			«typeDeclarationSerializer.serialize(typeDeclaration)»
-		«ENDFOR»''');
+		«ENDFOR»
+		''');
 
 		/* Struct Declaration */
 		header.addContent('''
@@ -199,7 +201,7 @@ class CodeBuilder implements IStatechartCode {
 		code.addContent('''
 			/* Clear input events of component «name» */
 			void clearInEvents«stName»(«stName»* statechart) {
-				«FOR input : inputs SEPARATOR '\n'»statechart->«input.name» = «expressionSerializer.serialize(input.expression)»;«ENDFOR»
+				«FOR input : inputs SEPARATOR System.lineSeparator»statechart->«input.name» = «expressionSerializer.serialize(input.expression)»;«ENDFOR»
 			}
 		''');
 
@@ -207,7 +209,7 @@ class CodeBuilder implements IStatechartCode {
 		code.addContent('''
 			/* Clear output events of component «name» */
 			void clearOutEvents«stName»(«stName»* statechart) {
-				«FOR output : outputs SEPARATOR '\n'»statechart->«output.name» = «expressionSerializer.serialize(output.expression)»;«ENDFOR»
+				«FOR output : outputs SEPARATOR System.lineSeparator»statechart->«output.name» = «expressionSerializer.serialize(output.expression)»;«ENDFOR»
 			}
 		''');
 
@@ -215,7 +217,7 @@ class CodeBuilder implements IStatechartCode {
 		code.addContent('''
 			/* Transitions of component «name» */
 			void changeState«stName»(«stName»* statechart) {
-				«FOR transition : xsts.transitions SEPARATOR '\n'»«actionSerializer.serialize(transition.action)»«ENDFOR»
+				«FOR transition : xsts.transitions SEPARATOR System.lineSeparator»«actionSerializer.serialize(transition.action)»«ENDFOR»
 			}
 		''');
 

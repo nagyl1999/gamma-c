@@ -198,7 +198,7 @@ class WrapperBuilder implements IStatechartCode {
 		
 		/* In Events & Parameters */
 		code.addContent('''
-			«FOR variable : inputs SEPARATOR '\n'»
+			«FOR variable : inputs SEPARATOR System.lineSeparator»
 				/* Setter for «variable.name.toFirstUpper» */
 				void set«variable.name.toFirstUpper»(«name»* statechart, «variableDeclarationSerializer.serialize(
 					variable.type, 
@@ -212,7 +212,7 @@ class WrapperBuilder implements IStatechartCode {
 		
 		/* Out Events & Parameters */
 		code.addContent('''
-		«FOR variable : outputs SEPARATOR '\n'»
+		«FOR variable : outputs SEPARATOR System.lineSeparator»
 			/* Getter for «variable.name.toFirstUpper» */
 			«variableDeclarationSerializer.serialize(
 				variable.type, 

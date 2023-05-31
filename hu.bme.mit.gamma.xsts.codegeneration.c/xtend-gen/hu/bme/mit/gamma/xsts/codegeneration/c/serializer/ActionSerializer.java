@@ -106,7 +106,8 @@ public class ActionSerializer {
         if (!_hasElements) {
           _hasElements = true;
         } else {
-          _builder.appendImmediate("\n", "");
+          String _lineSeparator = System.lineSeparator();
+          _builder.appendImmediate(_lineSeparator, "");
         }
         CharSequence _serialize = this.serialize(xstsSubaction);
         _builder.append(_serialize);
@@ -130,7 +131,8 @@ public class ActionSerializer {
         if (!_hasElements) {
           _hasElements = true;
         } else {
-          _builder.appendImmediate("\n", "");
+          String _lineSeparator = System.lineSeparator();
+          _builder.appendImmediate(_lineSeparator, "");
         }
         CharSequence _serialize = this.serialize(xstsSubaction);
         _builder.append(_serialize);
@@ -154,7 +156,8 @@ public class ActionSerializer {
         if (!_hasElements) {
           _hasElements = true;
         } else {
-          _builder.appendImmediate("\n", "");
+          String _lineSeparator = System.lineSeparator();
+          _builder.appendImmediate(_lineSeparator, "");
         }
         CharSequence _serialize = this.serialize(xstsSubaction);
         _builder.append(_serialize);

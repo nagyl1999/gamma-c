@@ -157,13 +157,12 @@ public class CodeBuilder implements IStatechartCode {
         if (!_hasElements) {
           _hasElements = true;
         } else {
-          _builder.appendImmediate("\n", "");
+          String _lineSeparator = System.lineSeparator();
+          _builder.appendImmediate(_lineSeparator, "");
         }
-        _builder.newLineIfNotEmpty();
         String _serialize = this.typeDeclarationSerializer.serialize(typeDeclaration);
         _builder.append(_serialize);
         _builder.newLineIfNotEmpty();
-        _builder.append("\t\t");
       }
     }
     this.header.addContent(_builder.toString());
@@ -356,7 +355,8 @@ public class CodeBuilder implements IStatechartCode {
         if (!_hasElements) {
           _hasElements = true;
         } else {
-          _builder_3.appendImmediate("\n", "\t");
+          String _lineSeparator = System.lineSeparator();
+          _builder_3.appendImmediate(_lineSeparator, "\t");
         }
         _builder_3.append("statechart->");
         String _name = input.getName();
@@ -389,7 +389,8 @@ public class CodeBuilder implements IStatechartCode {
         if (!_hasElements_1) {
           _hasElements_1 = true;
         } else {
-          _builder_4.appendImmediate("\n", "\t");
+          String _lineSeparator_1 = System.lineSeparator();
+          _builder_4.appendImmediate(_lineSeparator_1, "\t");
         }
         _builder_4.append("statechart->");
         String _name_1 = output.getName();
@@ -423,7 +424,8 @@ public class CodeBuilder implements IStatechartCode {
         if (!_hasElements_2) {
           _hasElements_2 = true;
         } else {
-          _builder_5.appendImmediate("\n", "\t");
+          String _lineSeparator_2 = System.lineSeparator();
+          _builder_5.appendImmediate(_lineSeparator_2, "\t");
         }
         CharSequence _serialize_5 = this.actionSerializer.serialize(transition.getAction());
         _builder_5.append(_serialize_5, "\t");
