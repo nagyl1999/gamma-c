@@ -5,11 +5,15 @@
 \chapter{Conclusion}
 %----------------------------------------------------------------------------
 
+In this chapter, we present a case study that demonstrates the practical implementation of a crossroad example using a Raspberry Pi. This case study showcases the application of embedded systems and highlights the integration of hardware and software components.
+
 %----------------------------------------------------------------------------
 \section{Case Study}
 %----------------------------------------------------------------------------
 
+In the Gamma tutorial, a crossroad example is presented for illustrating statechart compositions, model transformations, formal verification on an initially faulty model. The tutorial has a \textit{Controller} that synchronizes the two \textit{TrafficLight} objects, and provides a way to interrupt the normal workflow of the crossroad. The tutorial uses inbound and outbound ports to represent the interaction points of the system with its environment, the aforementioned police interrupt button and 4 event for each lamp component that represents the 3 color (red, yellow, green) plus an extra event where no lamp is on. By applying the C code generator to this tutorial example, we can transform the statechart composition into C code that utilizes the specified inbound and outbound ports to transfer these events to a physical form, utilizing a custom hardware board.
 
+The hardware configuration, acting as a hat for the Raspberry Pi, expands its functionality to act as a crossroad system. The crossroad hardware comprises two red LEDs, two yellow LEDs, and two green LEDs, representing the traffic lights, as well as a button that serves as police interrupt signal.
 
 %----------------------------------------------------------------------------
 \section{Overview}
