@@ -71,6 +71,13 @@ The structure of the code generator consists of several packages and classes. In
 
 Within the model package, there are two models and a common abstract base. The \textit{FileModel} class is the latter that handles file related operations. The \textit{CodeModel} class represents the model for the source code files, while the \textit{HeaderModel} class represents the model for the header files.
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{images/platforms.png}
+	\caption{The structure of the platforms package.}
+	\label{fig:timing}
+\end{figure}
+
 The platforms package is specifically designed for platform-independent timing code generation. It contains the \textit{IPlatform} interface, which is required by each platform implementation. At the end of this semester there is only one supported platform:
 
 \begin{itemize}
@@ -83,4 +90,4 @@ The serializer package plays a vital role in serializing various components of t
 \section{Current Limitations}
 %----------------------------------------------------------------------------
 
-The code generator has certain limitations that should be considered. For instance, it does not provide support for all types of gamma compositions, such as any asynchronous composition. Additionally, it is currently limited to Unix platforms, which may restrict its usage in certain environments. 
+The code generator has certain limitations that should be considered. For instance, it does not provide support for all types of gamma compositions, such as any asynchronous composition. Additionally, it is currently limited to Unix platforms, which may restrict its usage in certain environments. Moreover, the precision which we measure elapse time with also acts as a limiting factor. The model stores clock values as integers in milliseconds. Its granularity may not be sufficient for all applications that require more precise timing. Rounding errors may occur when converting between different units, leading to potential inaccuracies. Additionally, the code generator relies on variables to track elapsed time. In certain scenarios, if the elapsed time exceeds the maximum value that can be stored in the certain variable type, in our case an unsigned integer, an overflow may occur. This can lead to unexpected behavior or even segmentation faults in the generated code.

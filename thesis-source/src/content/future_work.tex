@@ -5,14 +5,8 @@
 \chapter{Future Work}
 %----------------------------------------------------------------------------
 
+In terms of future work, there are several areas that can be explored to enhance the capabilities of the code generator. Firstly, addressing the timing-related limitations by searching for a way to measure time with sufficient granularity while keeping overflow issues above an acceptable level, potentially solving them altogether. It requires thorough planning, since in cases where this problem is neglected segmentation faults can happen, on the other hand modifying the values of clock variables may result in nondeterministic behavior, possibly triggering unwanted events. 
 
+Expanding the platform support is another important aspect. While the code generator currently targets Unix platforms, extending its compatibility to handle other operating systems, scenarios where an OS is not present would broaden the code generators applicability in general.
 
-%----------------------------------------------------------------------------
-\section{Current Limitations}
-%----------------------------------------------------------------------------
-
-
-
-%----------------------------------------------------------------------------
-\section{Planned Features}
-%----------------------------------------------------------------------------
+Yet another significant direction for future development is the generation of unit tests for the generated code. By leveraging test cases provided by model checkers, it would be possible to automatically generate unit tests that cover our model's state space for the given coverage-criteria. Integrating formal verification techniques into the code generation process would provide a higher level of confidence in the generated code's behavior, possibly catching any error during generation that may result in the discovery of underlying problems within the code generator itself. 
