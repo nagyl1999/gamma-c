@@ -11,9 +11,9 @@ This chapter covers various aspects related to modeling and code generation. It 
 \section{Code Generation for Embedded Systems}
 %----------------------------------------------------------------------------
 
-This section discusses the challenges that arise when generating code from low-level models. Embedded systems\cite{Embedded} software is required to run on various hardware architectures to ensure flexibility and portability on different hardware components, reduce constraints on physical device selection, and provide long term support. Therefore, a high-level design language is needed to model the reactive system's behavior independently of the hardware and to enable software development on multiple platforms. 
+This section discusses the challenges that arise when generating code from low-level models. Embedded systems \cite{Embedded} software is required to run on various hardware architectures to ensure flexibility and portability on different hardware components, reduce constraints on physical device selection, and provide long term support. Therefore, a high-level design language is needed to model the reactive system's behavior independently of the hardware and to enable software development on multiple platforms. 
 
-UML Statecharts\cite{UMLState} serve best as the high-level design language for modeling component based reactive systems due to their ability to capture complex state behavior and event handling, greatly reducing complexity compared to programmer-made code. Gamma provides a composite language to build compositions of statecharts which helps to reduce complexity and increase modularity. As of now, Gamma lacks the capability to generate platform independent code apart from the already existing Java code generator which is not optimal for embedded systems due to its high resource requirements and lack of real-time support. The following objectives should be met by a code generator intended for embedded systems:
+UML Statecharts \cite{UMLState} serve best as the high-level design language for modeling component based reactive systems due to their ability to capture complex state behavior and event handling, greatly reducing complexity compared to programmer-made code. Gamma provides a composite language to build compositions of statecharts which helps to reduce complexity and increase modularity. As of now, Gamma lacks the capability to generate platform independent code apart from the already existing Java code generator which is not optimal for embedded systems due to its high resource requirements and lack of real-time support. The following objectives should be met by a code generator intended for embedded systems:
 
 \begin{itemize}
 	\item \textbf{Limited resources:} The code should be runnable on wide-range of hardware architectures. Its choice of language should consider resource requirements and compiler support for embedded hardware.
@@ -34,7 +34,7 @@ In Gamma, components are defined using statecharts, which are based on the Unifi
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.6\textwidth]{images/gamma.png}
-	\caption{The route of models to code generation.\cite{CPS}}
+	\caption{The route of models to code generation \cite{CPS}.}
 	\label{fig:gamma}
 \end{figure}
 
@@ -51,7 +51,7 @@ To facilitate formal verification, the Gamma compositions can then be transforme
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\textwidth]{images/transformation.png}
-	\caption{Model transformations using Gamma.\cite{Elosztott}}
+	\caption{Model transformations using Gamma \cite{Elosztott}.}
 	\label{fig:transformation}
 \end{figure}
 
@@ -68,7 +68,7 @@ Since the code generator uses a version of XSTS serialized to XML, containing sp
 The mapping begins with the type definitions present in the XSTS model. These type definitions are mapped to C enums. The enums serve as symbolic representations of the regions and states within the system. Following the type definitions, the variable declarations in the XSTS model are mapped to variables in the C code. These variables represent the underlying mechanism of the component. In the C code, these variables are declared within a struct. Common data types used in the variable declarations include integers (unsigned if the XSTS variable has a ClockVariable annotation), floats, booleans, and the previously mentioned enums.
 \bigskip
 
-\begin{lstlisting}[language=C, caption={Representation of regions in XSTS}]
+\begin{lstlisting}[language=C, caption={Representation of regions in XSTS.}]
 	<typeDeclarations name="Main_region_Controller">
 		<type xsi:type="hu.bme.mit.gamma.expression:EnumerationTypeDefinition">
 			<literals name="__Inactive__"/>
