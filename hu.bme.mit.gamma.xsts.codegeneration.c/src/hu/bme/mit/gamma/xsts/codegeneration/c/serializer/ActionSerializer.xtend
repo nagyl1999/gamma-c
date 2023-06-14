@@ -29,9 +29,9 @@ import static extension hu.bme.mit.gamma.xsts.derivedfeatures.XstsDerivedFeature
  */
 class ActionSerializer {
 	
-	final HavocSerializer havocSerializer = new HavocSerializer;
-	final ExpressionSerializer expressionSerializer = new ExpressionSerializer;
-	final VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
+	val HavocSerializer havocSerializer = new HavocSerializer;
+	val ExpressionSerializer expressionSerializer = new ExpressionSerializer;
+	val VariableDeclarationSerializer variableDeclarationSerializer = new VariableDeclarationSerializer;
 	
 	/**
 	 * Serializes an initializing action.
@@ -128,7 +128,7 @@ class ActionSerializer {
 	def dispatch CharSequence serialize(VariableDeclarationAction action) {
 		return '''«variableDeclarationSerializer.serialize(
 			action.variableDeclaration.type, 
-			action.variableDeclaration.annotations.exists[type | type instanceof ClockVariableDeclarationAnnotation],
+			action.variableDeclaration.annotations.exists[it instanceof ClockVariableDeclarationAnnotation],
 			action.variableDeclaration.name
 		)» «action.variableDeclaration.name»;''';
 	}
